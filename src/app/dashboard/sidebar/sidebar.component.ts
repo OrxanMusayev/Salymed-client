@@ -12,49 +12,43 @@ import { filter } from 'rxjs/operators';
 })
 export class SidebarComponent implements OnInit {
   isCollapsed = false;
-  activeMenuItem = 'dashboard-overview';
+  activeMenuItem = 'dashboard';
   @Output() sidebarToggle = new EventEmitter<void>();
 
   menuItems = [
     {
-      id: 'dashboard-overview',
-      label: 'Gösterge Paneli',
-      icon: 'fas fa-tachometer-alt',
+      id: 'dashboard',
+      label: 'İdarə Paneli',
+      icon: 'fas fa-chart-line',
       route: '/dashboard'
     },
     {
       id: 'doctors',
-      label: 'Doktorlar',
+      label: 'Həkimlər',
       icon: 'fas fa-user-md',
       route: '/doctors'
     },
     {
-      id: 'overview',
-      label: 'Genel Bakış',
-      icon: 'fas fa-chart-bar',
-      route: '/overview'
+      id: 'subscription',
+      label: 'Abunəlik',
+      icon: 'fas fa-credit-card',
+      route: '/subscription'
     },
     {
       id: 'account',
-      label: 'Hesap',
+      label: 'Hesab',
       icon: 'fas fa-user',
       route: '/account'
     },
     {
       id: 'automation',
-      label: 'Otomasyon',
+      label: 'Avtomatlaşdırma',
       icon: 'fas fa-robot',
       route: '/automation'
     },
     {
-      id: 'subscription',
-      label: 'Abonelik',
-      icon: 'fas fa-credit-card',
-      route: '/subscription'
-    },
-    {
       id: 'clinic-info',
-      label: 'Klinik Bilgisi',
+      label: 'Klinik Məlumatı',
       icon: 'fas fa-hospital',
       route: '/clinic-info'
     }

@@ -25,7 +25,7 @@ export const routes: Routes = [
     path: 'dashboard', 
     component: DashboardComponent,
     children: [
-      { path: '', loadComponent: () => import('./dashboard/dashboard-overview/dashboard-overview.component').then(m => m.DashboardOverviewComponent) }
+      { path: '', loadComponent: () => import('./dashboard/overview/overview.component').then(m => m.OverviewComponent) }
     ]
   },
   { 
@@ -61,13 +61,6 @@ export const routes: Routes = [
     component: DashboardComponent,
     children: [
       { path: '', loadComponent: () => import('./dashboard/doctors/doctors.component').then(m => m.DoctorsComponent) }
-    ]
-  },
-  { 
-    path: 'overview', 
-    component: DashboardComponent,
-    children: [
-      { path: '', loadComponent: () => import('./dashboard/overview/overview.component').then(m => m.OverviewComponent) }
     ]
   },
   { path: '**', redirectTo: '' }

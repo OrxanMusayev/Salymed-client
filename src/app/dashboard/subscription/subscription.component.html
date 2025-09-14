@@ -1,0 +1,271 @@
+<div class="subscription-container">
+  <!-- Header Section -->
+  <div class="page-header">
+    <div class="header-content">
+      <div class="title-section">
+        <h1 class="page-title">
+          <i class="fas fa-crown"></i>
+          Abonəliyim
+        </h1>
+        <p class="page-subtitle">Cari abonəlik planınızı idarə edin və dəyişdirin</p>
+      </div>
+      <button class="upgrade-btn" (click)="upgradePlan()">
+        <i class="fas fa-arrow-up"></i>
+        <span>Planı Yüksəlt</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Current Plan Section -->
+  <div class="current-plan-card">
+    <div class="plan-header">
+      <div class="plan-badge">
+        <i class="fas fa-star"></i>
+        Aktiv Plan
+      </div>
+      <div class="plan-info">
+        <h2 class="plan-name">{{ currentPlan.name }}</h2>
+        <div class="plan-price">
+          <span class="currency">₼</span>
+          <span class="amount">{{ currentPlan.price }}</span>
+          <span class="period">/ay</span>
+        </div>
+        <p class="plan-description">{{ currentPlan.description }}</p>
+      </div>
+      <div class="plan-actions">
+        <button class="action-btn primary" (click)="changePlan()">
+          <i class="fas fa-exchange-alt"></i>
+          Planı Dəyiş
+        </button>
+      </div>
+    </div>
+
+    <!-- Plan Features -->
+    <div class="plan-features">
+      <h3 class="features-title">Aktiv Xüsusiyyətlər</h3>
+      <div class="features-grid">
+        <div class="feature-item" *ngFor="let feature of currentPlan.features">
+          <i class="fas fa-check feature-icon"></i>
+          <span class="feature-text">{{ feature }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Payment Info Section -->
+  <div class="payment-info-section">
+    <!-- Payment Method -->
+    <div class="payment-method-card">
+      <div class="section-header">
+        <h2 class="section-title">
+          <i class="fas fa-credit-card"></i>
+          Ödəmə Yöntəmi
+        </h2>
+      </div>
+      
+      <div class="payment-card">
+        <div class="card-info">
+          <div class="card-icon">
+            <i class="fab fa-cc-visa"></i>
+          </div>
+          <div class="card-details">
+            <h3 class="card-number">**** 4532</h3>
+            <p class="card-holder">Orxan Musayev</p>
+          </div>
+        </div>
+        <button class="change-card-btn" (click)="openPaymentModal()">
+          <i class="fas fa-edit"></i>
+          Dəyişdir
+        </button>
+      </div>
+    </div>
+
+    <!-- Next Payment -->
+    <div class="next-payment-card">
+      <div class="section-header">
+        <h2 class="section-title">
+          <i class="fas fa-calendar-alt"></i>
+          Növbəti Ödəniş
+        </h2>
+      </div>
+      
+      <div class="payment-info">
+        <div class="payment-amount">
+          <span class="currency">₼</span>
+          <span class="amount">{{ currentPlan.price }}</span>
+        </div>
+        <div class="payment-details">
+          <p class="payment-date">15 Oktyabr 2025</p>
+          <p class="payment-plan">{{ currentPlan.name }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Billing History -->
+  <div class="billing-section">
+    <div class="section-header">
+      <h2 class="section-title">
+        <i class="fas fa-receipt"></i>
+        Ödəmə Tarixçəsi
+      </h2>
+      <button class="download-btn" (click)="downloadInvoices()">
+        <i class="fas fa-download"></i>
+        Faktura Yüklə
+      </button>
+    </div>
+
+    <div class="billing-table-wrapper">
+      <table class="billing-table">
+        <thead>
+          <tr>
+            <th>Tarix</th>
+            <th>Plan</th>
+            <th>Məbləğ</th>
+            <th>Status</th>
+            <th>Əməliyyat</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let invoice of billingHistory" [class.failed]="invoice.status === 'failed'">
+            <td>{{ invoice.date | date:'dd.MM.yyyy' }}</td>
+            <td>{{ invoice.planName }}</td>
+            <td class="amount">₼{{ invoice.amount }}</td>
+            <td>
+              <span class="status-badge" [class]="invoice.status">
+                <i class="fas" [class.fa-check]="invoice.status === 'paid'" 
+                   [class.fa-times]="invoice.status === 'failed'" 
+                   [class.fa-clock]="invoice.status === 'pending'"></i>
+                {{ getStatusText(invoice.status) }}
+              </span>
+            </td>
+            <td>
+              <button class="table-action-btn" (click)="downloadInvoice(invoice.id)">
+                <i class="fas fa-download"></i>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- Payment Modal -->
+<div class="modal-overlay" *ngIf="showPaymentModal" (click)="closePaymentModal()">
+  <div class="modal-container" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2 class="modal-title">
+        <i class="fas fa-credit-card"></i>
+        Kart Məlumatları
+      </h2>
+      <button class="modal-close-btn" (click)="closePaymentModal()">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+
+        <div class="modal-body">
+      <!-- Existing Card Selection -->
+      <div class="existing-card-section">
+        <div class="card-selection-item">
+          <label class="card-radio-option">
+            <input type="radio" 
+                   name="paymentMode" 
+                   value="existing" 
+                   [(ngModel)]="paymentMode">
+            <span class="radio-custom"></span>
+          </label>
+          <div class="existing-card-info">
+            <div class="card-visual">
+              <i class="fab fa-cc-visa"></i>
+            </div>
+            <div class="card-details">
+              <div class="card-number">•••• •••• •••• 4532</div>
+              <div class="card-holder">Dr. Orxan Musayev</div>
+              <div class="card-expiry">Son istifadə: 12/26</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- New Card Section -->
+      <div class="new-card-section">
+        <div class="new-card-header">
+          <label class="card-radio-option">
+            <input type="radio" 
+                   name="paymentMode" 
+                   value="new" 
+                   [(ngModel)]="paymentMode">
+            <span class="radio-custom"></span>
+            <span class="radio-text">Yeni Kart Əlavə Et</span>
+          </label>
+        </div>
+
+        <div *ngIf="paymentMode === 'new'" class="new-card-form">
+          <form class="payment-form">
+            <div class="form-group">
+              <label class="form-label">Kart Nömrəsi</label>
+              <input type="text" 
+                     [(ngModel)]="paymentForm.cardNumber" 
+                     name="cardNumber"
+                     placeholder="1234 5678 9012 3456"
+                     class="form-input"
+                     maxlength="19">
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Son İstifadə</label>
+                <input type="text" 
+                       [(ngModel)]="paymentForm.expiryDate" 
+                       name="expiryDate"
+                       placeholder="MM/YY"
+                       class="form-input"
+                       maxlength="5">
+              </div>
+              <div class="form-group">
+                <label class="form-label">CVV</label>
+                <input type="text" 
+                       [(ngModel)]="paymentForm.cvv" 
+                       name="cvv"
+                       placeholder="123"
+                       class="form-input"
+                       maxlength="3">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Kart Sahibi</label>
+              <input type="text" 
+                     [(ngModel)]="paymentForm.cardHolder" 
+                     name="cardHolder"
+                     placeholder="Ad Soyad"
+                     class="form-input">
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- Modal Actions -->
+      <div class="modal-actions">
+        <!-- Mevcut kart seçiliyse sadece Bağla butonu -->
+        <ng-container *ngIf="paymentMode === 'existing'">
+          <button type="button" class="btn-close-only" (click)="closePaymentModal()">
+            Bağla
+          </button>
+        </ng-container>
+
+        <!-- Yeni kart seçiliyse Ləğv Et + Təsdıqlə butonları -->
+        <ng-container *ngIf="paymentMode === 'new'">
+          <button type="button" class="btn-cancel" (click)="closePaymentModal()">
+            Ləğv Et
+          </button>
+          <button type="button" class="btn-save" (click)="savePaymentMethod()">
+            <i class="fas fa-save"></i>
+            Təsdıqlə
+          </button>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+</div>

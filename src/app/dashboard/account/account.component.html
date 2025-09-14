@@ -1,0 +1,177 @@
+<div class="account-container">
+  <!-- Main Content Grid -->
+  <div class="account-grid" *ngIf="!isLoading">
+    <!-- Profile Card -->
+    <div class="profile-card">
+      <div class="card-header">
+        <div class="profile-avatar" [style.background-color]="getAvatarColor()">
+          <span class="avatar-initials">{{ userProfile.firstName.charAt(0) }}{{ userProfile.lastName.charAt(0) }}</span>
+        </div>
+        <div class="profile-info">
+          <h3 class="profile-name">{{ userProfile.firstName }} {{ userProfile.lastName }}</h3>
+          <p class="profile-role">{{ userProfile.role === 'admin' ? 'Administrator' : userProfile.role === 'doctor' ? 'Həkim' : 'Əməkdaş' }}</p>
+          <div class="profile-badges">
+            <span class="badge admin" *ngIf="userProfile.role === 'admin'">
+              <i class="fas fa-crown"></i>
+              Admin
+            </span>
+            <span class="badge active">
+              <i class="fas fa-check-circle"></i>
+              Aktiv
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Personal Information Card -->
+    <div class="info-card">
+      <div class="card-header">
+        <div class="card-title">
+          <i class="fas fa-user"></i>
+          <span>Şəxsi Məlumatlar</span>
+        </div>
+      </div>
+      
+      <div class="card-body">
+        <div class="form-grid">
+          <div class="form-group">
+            <label class="form-label">Ad</label>
+            <input 
+              type="text" 
+              class="form-input"
+              [(ngModel)]="userProfile.firstName"
+              [readonly]="!isEditing"
+              placeholder="Adınızı daxil edin">
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label">Soyad</label>
+            <input 
+              type="text" 
+              class="form-input"
+              [(ngModel)]="userProfile.lastName"
+              [readonly]="!isEditing"
+              placeholder="Soyadınızı daxil edin">
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label">E-mail</label>
+            <input 
+              type="email" 
+              class="form-input"
+              [(ngModel)]="userProfile.email"
+              [readonly]="!isEditing"
+              placeholder="E-mail ünvanınızı daxil edin">
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label">Telefon</label>
+            <input 
+              type="tel" 
+              class="form-input"
+              [(ngModel)]="userProfile.phone"
+              [readonly]="!isEditing"
+              placeholder="Telefon nömrənizi daxil edin">
+          </div>
+        </div>
+
+        <!-- Card Action Buttons -->
+        <div class="card-actions">
+          <button *ngIf="!isEditing" class="edit-btn" (click)="toggleEdit()">
+            <i class="fas fa-edit"></i>
+            <span>Redaktə Et</span>
+          </button>
+          
+          <div *ngIf="isEditing" class="edit-actions">
+            <button class="btn btn-secondary" (click)="cancelEdit()">
+              <i class="fas fa-times"></i>
+              Ləğv Et
+            </button>
+            <button class="btn btn-primary" (click)="saveChanges()" [disabled]="isSaving">
+              <i [class]="isSaving ? 'fas fa-spinner fa-spin' : 'fas fa-save'"></i>
+              {{ isSaving ? 'Saxlanılır...' : 'Yadda Saxla' }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Security Card -->
+    <div class="security-card">
+      <div class="card-header">
+        <div class="card-title">
+          <i class="fas fa-shield-alt"></i>
+          <span>Təhlükəsizlik</span>
+        </div>
+      </div>
+      
+      <div class="card-body">
+        <div class="security-item" *ngIf="!isChangingPassword">
+          <div class="security-icon">
+            <i class="fas fa-key"></i>
+          </div>
+          <div class="security-content">
+            <h4 class="security-title">Şifrə</h4>
+            <p class="security-desc">Son dəyişiklik: {{ lastPasswordChange | date:'dd.MM.yyyy' }}</p>
+          </div>
+          <button class="security-btn" (click)="startPasswordChange()">
+            <i class="fas fa-edit"></i>
+            Dəyiş
+          </button>
+        </div>
+
+        <!-- Password Change Form -->
+        <div class="password-change-form" *ngIf="isChangingPassword">
+          <div class="form-grid">
+            <div class="form-group">
+              <label class="form-label">Mövcud Şifrə</label>
+              <input 
+                type="password" 
+                class="form-input"
+                [(ngModel)]="passwordData.currentPassword"
+                placeholder="Mövcud şifrənizi daxil edin">
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label">Yeni Şifrə</label>
+              <input 
+                type="password" 
+                class="form-input"
+                [(ngModel)]="passwordData.newPassword"
+                placeholder="Yeni şifrənizi daxil edin">
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label">Yeni Şifrə Təkrar</label>
+              <input 
+                type="password" 
+                class="form-input"
+                [(ngModel)]="passwordData.confirmPassword"
+                placeholder="Yeni şifrənizi təkrar daxil edin">
+            </div>
+          </div>
+
+          <div class="password-actions">
+            <button class="btn btn-secondary" (click)="cancelPasswordChange()">
+              <i class="fas fa-times"></i>
+              Ləğv Et
+            </button>
+            <button class="btn btn-primary" (click)="savePasswordChange()" [disabled]="isPasswordSaving">
+              <i [class]="isPasswordSaving ? 'fas fa-spinner fa-spin' : 'fas fa-save'"></i>
+              {{ isPasswordSaving ? 'Saxlanılır...' : 'Şifrəni Saxla' }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="loading-state">
+    <div class="loading-spinner">
+      <i class="fas fa-spinner fa-spin"></i>
+    </div>
+    <p class="loading-text">Məlumatlar yüklənir...</p>
+  </div>
+</div>

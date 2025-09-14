@@ -23,6 +23,30 @@ export class SidebarComponent implements OnInit {
       route: '/dashboard'
     },
     {
+      id: 'automation',
+      label: 'Avtomatlaşdırma',
+      icon: 'fas fa-robot',
+      route: '/automation'
+    },
+    {
+      id: 'chatbot',
+      label: 'Chatbot Operatoru',
+      icon: 'fas fa-comments',
+      route: '/chatbot'
+    },
+    {
+      id: 'account',
+      label: 'Hesab',
+      icon: 'fas fa-user',
+      route: '/account'
+    },
+    {
+      id: 'clinic-info',
+      label: 'Klinik Məlumatları',
+      icon: 'fas fa-hospital',
+      route: '/clinic-info'
+    },
+    {
       id: 'doctors',
       label: 'Həkimlər',
       icon: 'fas fa-user-md',
@@ -33,24 +57,6 @@ export class SidebarComponent implements OnInit {
       label: 'Abunəlik',
       icon: 'fas fa-credit-card',
       route: '/subscription'
-    },
-    {
-      id: 'account',
-      label: 'Hesab',
-      icon: 'fas fa-user',
-      route: '/account'
-    },
-    {
-      id: 'automation',
-      label: 'Avtomatlaşdırma',
-      icon: 'fas fa-robot',
-      route: '/automation'
-    },
-    {
-      id: 'clinic-info',
-      label: 'Klinik Məlumatı',
-      icon: 'fas fa-hospital',
-      route: '/clinic-info'
     }
   ];
 

@@ -1,9 +1,20 @@
 .clinic-page {
   min-height: 100vh;
-  background: 
-    radial-gradient(ellipse at top left, rgba(30, 64, 175, 0.03), transparent 50%),
-    radial-gradient(ellipse at bottom right, rgba(4, 120, 87, 0.03), transparent 50%),
-    linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  background: var(--bg-gradient);
+  position: relative;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+      radial-gradient(ellipse at 20% 20%, rgba(255, 255, 255, 0.1), transparent 50%),
+      radial-gradient(ellipse at 80% 80%, rgba(255, 255, 255, 0.05), transparent 50%);
+    pointer-events: none;
+  }
 }
 
 /* Header */

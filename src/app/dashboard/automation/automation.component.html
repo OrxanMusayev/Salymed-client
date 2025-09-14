@@ -1,0 +1,351 @@
+<div class="automation-container">
+  <div class="automation-grid">
+    
+    <!-- 1. CLINIC WHATSAPP SETUP -->
+    <div class="setup-card">
+      <div class="card-header">
+        <div class="card-title">
+          <i class="fab fa-whatsapp"></i>
+          <span>Klinik WhatsApp Qurulumu</span>
+        </div>
+        <div class="status-badge" [ngClass]="'status-' + whatsappStatus">
+          <i [class]="whatsappStatus === 'connected' ? 'fas fa-check-circle' : 
+                     whatsappStatus === 'verifying' ? 'fas fa-spinner fa-spin' : 'fas fa-times-circle'"></i>
+          <span>{{ whatsappStatus === 'connected' ? 'Bağlandı' : 
+                   whatsappStatus === 'verifying' ? 'Yoxlanır' : 'Bağlanmayıb' }}</span>
+        </div>
+      </div>
+      
+      <div class="card-content">
+        <div class="form-group">
+          <div class="option" [class.active]="useExistingNumber" (click)="toggleNumberType()">
+            <input type="radio" [checked]="useExistingNumber">
+            <span>Mövcud nömrədən istifadə et: {{clinicPhone}}</span>
+          </div>
+          <div class="option" [class.active]="!useExistingNumber" (click)="toggleNumberType()">
+            <input type="radio" [checked]="!useExistingNumber">
+            <span>Yeni WhatsApp nömrəsi əlavə et</span>
+          </div>
+        </div>
+        
+        <div class="form-group" *ngIf="!useExistingNumber">
+          <div class="input-group">
+            <select [(ngModel)]="selectedCountryCode" class="form-control">
+              <option *ngFor="let country of countryCodes" [value]="country.code">
+                {{country.code}} {{country.country}}
+              </option>
+            </select>
+            <input type="tel" 
+                   [(ngModel)]="newWhatsAppNumber" 
+                   placeholder="Telefon nömrəsi"
+                   class="form-control">
+          </div>
+        </div>
+        
+        <button class="btn btn-whatsapp" 
+                [disabled]="whatsappStatus === 'verifying'"
+                (click)="verifyWhatsApp()">
+          <i [class]="whatsappStatus === 'verifying' ? 'fas fa-spinner fa-spin' : 'fas fa-check'"></i>
+          {{ whatsappStatus === 'verifying' ? 'Yoxlanır...' : 'WhatsApp-ı Yoxla' }}
+        </button>
+      </div>
+    </div>
+
+    <!-- 2. DOCTOR MANAGEMENT -->
+    <div class="setup-card">
+      <div class="card-header">
+        <div class="card-title">
+          <i class="fas fa-user-md"></i>
+          <span>Həkim WhatsApp İdarəetməsi</span>
+        </div>
+        <button class="btn btn-success btn-sm" (click)="addAllDoctors()">
+          <i class="fas fa-plus-circle"></i>
+          Hamısını əlavə et
+        </button>
+      </div>
+      
+      <div class="card-content">
+        <div class="form-group">
+          <div class="search-doctors">
+            <i class="fas fa-search"></i>
+            <input type="text" 
+                   [(ngModel)]="searchDoctors" 
+                   placeholder="Həkim axtar..."
+                   class="form-control">
+          </div>
+        </div>
+        
+        <div class="doctors-list">
+          <div *ngFor="let doctor of filteredDoctors" class="doctor-item">
+            <div class="doctor-info">
+              <div class="doctor-avatar">
+                {{getDoctorInitials(doctor.name)}}
+              </div>
+              <div class="doctor-details">
+                <h4>{{doctor.name}}</h4>
+                <p>{{doctor.specialty}}</p>
+              </div>
+            </div>
+            
+            <div class="doctor-phone">
+              <input type="tel" 
+                     [(ngModel)]="doctor.phone" 
+                     placeholder="Telefon nömrəsi"
+                     class="form-control">
+            </div>
+            
+            <div class="doctor-actions">
+              <div class="status-indicator" [ngClass]="'status-' + doctor.status">
+                <i [class]="doctor.whatsappConnected ? 'fas fa-check-circle' : 'fas fa-times-circle'"></i>
+              </div>
+              <button class="btn btn-secondary btn-sm" 
+                      [disabled]="!doctor.phone"
+                      (click)="toggleDoctorWhatsApp(doctor)">
+                {{doctor.whatsappConnected ? 'Ləğv et' : 'Bağla'}}
+              </button>
+              <button class="btn btn-success btn-sm" 
+                      [disabled]="!doctor.whatsappConnected"
+                      (click)="testDoctorMessage(doctor)">
+                <i class="fas fa-paper-plane"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. AUTOMATION FEATURES -->
+    <div class="setup-card">
+      <div class="card-header">
+        <div class="card-title">
+          <i class="fas fa-cogs"></i>
+          <span>Avtomatlaşdırma Xüsusiyyətləri</span>
+        </div>
+      </div>
+      
+      <div class="card-content">
+        <div class="features-grid">
+          <div class="feature-item">
+            <label class="switch">
+              <input type="checkbox" [(ngModel)]="automationFeatures.appointmentConfirmations">
+              <span class="slider"></span>
+            </label>
+            <div class="feature-info">
+              <h4>Təyinat Təsdiqləri</h4>
+              <p>Avtomatik təyinat təsdiqi mesajları</p>
+            </div>
+          </div>
+          
+          <div class="feature-item">
+            <label class="switch">
+              <input type="checkbox" [(ngModel)]="automationFeatures.appointmentReminders24h">
+              <span class="slider"></span>
+            </label>
+            <div class="feature-info">
+              <h4>24 Saat Xatırlatma</h4>
+              <p>Təyinatdan 24 saat əvvəl xatırlatma</p>
+            </div>
+          </div>
+          
+          <div class="feature-item">
+            <label class="switch">
+              <input type="checkbox" [(ngModel)]="automationFeatures.appointmentReminders1h">
+              <span class="slider"></span>
+            </label>
+            <div class="feature-info">
+              <h4>1 Saat Xatırlatma</h4>
+              <p>Təyinatdan 1 saat əvvəl xatırlatma</p>
+            </div>
+          </div>
+          
+          <div class="feature-item">
+            <label class="switch">
+              <input type="checkbox" [(ngModel)]="automationFeatures.reschedulingRequests">
+              <span class="slider"></span>
+            </label>
+            <div class="feature-info">
+              <h4>Vaxt Dəyişikliyi Sorğuları</h4>
+              <p>Avtomatik vaxt dəyişikliyi təklifi</p>
+            </div>
+          </div>
+          
+          <div class="feature-item">
+            <label class="switch">
+              <input type="checkbox" [(ngModel)]="automationFeatures.noshowFollowups">
+              <span class="slider"></span>
+            </label>
+            <div class="feature-info">
+              <h4>Gəlməyənlərə Təqib</h4>
+              <p>Təyinata gəlməyən xəstələrə mesaj</p>
+            </div>
+          </div>
+          
+          <div class="feature-item">
+            <label class="switch">
+              <input type="checkbox" [(ngModel)]="automationFeatures.welcomeMessages">
+              <span class="slider"></span>
+            </label>
+            <div class="feature-info">
+              <h4>Xoş Gəlmisiniz Mesajları</h4>
+              <p>Yeni xəstələr üçün qarşılama mesajı</p>
+            </div>
+          </div>
+          
+          <div class="feature-item">
+            <label class="switch">
+              <input type="checkbox" [(ngModel)]="automationFeatures.availabilityUpdates">
+              <span class="slider"></span>
+            </label>
+            <div class="feature-info">
+              <h4>Əlçatanlıq Yeniləmələri</h4>
+              <p>Həkim mövcudluğu dəyişikliklərini bildir</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. WEBSITE INTEGRATION -->
+    <div class="setup-card">
+      <div class="card-header">
+        <div class="card-title">
+          <i class="fas fa-globe"></i>
+          <span>Veb Sayt İnteqrasiyası</span>
+        </div>
+        <div class="status-badge" [ngClass]="websiteIntegrationEnabled ? 'status-connected' : 'status-not-connected'">
+          <i [class]="websiteIntegrationEnabled ? 'fas fa-check-circle' : 'fas fa-times-circle'"></i>
+          <span>{{websiteIntegrationEnabled ? 'Aktiv' : 'Qeyri-aktiv'}}</span>
+        </div>
+      </div>
+      
+      <div class="card-content">
+        <div class="integration-toggle">
+          <label class="switch">
+            <input type="checkbox" [(ngModel)]="websiteIntegrationEnabled" (change)="toggleWebsiteIntegration()">
+            <span class="slider"></span>
+          </label>
+          <span>Veb sayt rezervasyon sistemi ilə inteqrasiyanı aktivləşdir</span>
+        </div>
+        
+                  <div class="integration-details" *ngIf="websiteIntegrationEnabled">
+            <div class="form-group">
+              <label>API Açar:</label>
+              <div class="input-group">
+                <input type="text" [value]="apiKey" readonly class="form-control">
+                <button class="btn btn-secondary" (click)="copyApiKey()">
+                  <i class="fas fa-copy"></i>
+                </button>
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label>İnteqrasiya Kodu:</label>
+              <button class="btn btn-secondary" (click)="copyIntegrationCode()">
+                <i class="fas fa-code"></i>
+                Kodu Kopyala
+              </button>
+            </div>
+            
+            <div class="integration-actions">
+              <button class="btn btn-success btn-sm" (click)="showDocumentation = true">
+                <i class="fas fa-book"></i>
+                Sənədlər
+              </button>
+              <button class="btn btn-primary btn-sm" (click)="testIntegration()">
+                <i class="fas fa-flask"></i>
+                Test Et
+              </button>
+            </div>
+          </div>
+      </div>
+    </div>
+
+    <!-- 5. SETTINGS -->
+    <div class="setup-card">
+      <div class="card-header">
+        <div class="card-title">
+          <i class="fas fa-cog"></i>
+          <span>Ümumi Parametrlər</span>
+        </div>
+      </div>
+      
+      <div class="card-content">
+        <div class="settings-grid">
+          <div class="form-group">
+            <label>İş Saatları:</label>
+            <div class="input-group">
+              <input type="time" [(ngModel)]="businessHours.start" class="form-control">
+              <span class="input-group-text">-</span>
+              <input type="time" [(ngModel)]="businessHours.end" class="form-control">
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label>Mesaj Dili:</label>
+            <select [(ngModel)]="selectedLanguage" class="form-control">
+              <option *ngFor="let lang of languages" [value]="lang.code">
+                {{lang.name}}
+              </option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- API DOCUMENTATION MODAL -->
+<div class="modal-overlay" *ngIf="showDocumentation" (click)="showDocumentation = false">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3>API İnteqrasiya Sənədləri</h3>
+      <button class="close-btn" (click)="showDocumentation = false">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="documentation-section">
+        <h4>1. Rezervasyon Widget-i</h4>
+        <pre><code>&lt;script src="https://api.salymed.az/booking.js"&gt;&lt;/script&gt;
+&lt;script&gt;
+  SalyMed.init(&#123;
+    apiKey: "{{apiKey}}",
+    clinicId: "your-clinic-id",
+    language: "az"
+  &#125;);
+&lt;/script&gt;</code></pre>
+      </div>
+      
+      <div class="documentation-section">
+        <h4>2. REST API Endpoints</h4>
+        <div class="endpoint">
+          <strong>GET /api/appointments</strong>
+          <p>Bütün təyinatları əldə et</p>
+        </div>
+        <div class="endpoint">
+          <strong>POST /api/appointments</strong>
+          <p>Yeni təyinat yarat</p>
+        </div>
+        <div class="endpoint">
+          <strong>PUT /api/appointments/:id</strong>
+          <p>Təyinatı yenilə</p>
+        </div>
+      </div>
+      
+      <div class="documentation-section">
+        <h4>3. Webhook Events</h4>
+        <ul>
+          <li><code>appointment.created</code> - Yeni təyinat yaradıldı</li>
+          <li><code>appointment.updated</code> - Təyinat yeniləndi</li>
+          <li><code>appointment.cancelled</code> - Təyinat ləğv edildi</li>
+        </ul>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="download-btn" (click)="downloadDocumentation()">
+        <i class="fas fa-download"></i>
+        PDF Yüklə
+      </button>
+    </div>
+  </div>
+</div>

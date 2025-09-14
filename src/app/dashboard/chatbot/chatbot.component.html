@@ -1,0 +1,231 @@
+<div class="chatbot-container">
+  <!-- Header -->
+  <div class="page-header">
+    <div class="header-content">
+      <div class="header-info">
+        <h1><i class="fas fa-comments"></i> Chatbot Operatoru</h1>
+        <p>Klinik WhatsApp nömrəsinə yazan xəstələr üçün avtomatik cavab sistemi</p>
+      </div>
+      <div class="header-actions">
+        <button class="btn btn-success" (click)="testChatbot()">
+          <i class="fas fa-play"></i>
+          Test Et
+        </button>
+        <button class="btn btn-primary" (click)="saveSettings()">
+          <i class="fas fa-save"></i>
+          Saxla
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="chatbot-grid">
+    
+    <!-- Əsas Ayarlar -->
+    <div class="card">
+      <div class="card-header">
+        <h3><i class="fas fa-cog"></i> Əsas Ayarlar</h3>
+      </div>
+      <div class="card-content">
+        <div class="form-group">
+          <label class="switch-label">
+            <span>Chatbot Aktiv</span>
+            <label class="switch">
+              <input type="checkbox" [(ngModel)]="chatbotSettings.enabled">
+              <span class="slider"></span>
+            </label>
+          </label>
+        </div>
+
+        <div class="form-group">
+          <label for="responseDelay">Cavab Gecikmesi (saniyə)</label>
+          <input 
+            type="number" 
+            id="responseDelay"
+            class="form-control"
+            [(ngModel)]="chatbotSettings.responseDelay"
+            min="1"
+            max="10">
+        </div>
+
+        <div class="form-group">
+          <label for="language">Dil</label>
+          <select id="language" class="form-control" [(ngModel)]="chatbotSettings.language">
+            <option value="az">Azərbaycan dili</option>
+            <option value="en">English</option>
+            <option value="ru">Русский</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- İş Saatları -->
+    <div class="card">
+      <div class="card-header">
+        <h3><i class="fas fa-clock"></i> İş Saatları</h3>
+      </div>
+      <div class="card-content">
+        <div class="form-group">
+          <label class="switch-label">
+            <span>İş Saatları Məhdudiyyəti</span>
+            <label class="switch">
+              <input type="checkbox" [(ngModel)]="chatbotSettings.workingHours.enabled">
+              <span class="slider"></span>
+            </label>
+          </label>
+        </div>
+
+        <div class="time-inputs" *ngIf="chatbotSettings.workingHours.enabled">
+          <div class="form-group">
+            <label for="startTime">Başlama Vaxtı</label>
+            <input 
+              type="time" 
+              id="startTime"
+              class="form-control"
+              [(ngModel)]="chatbotSettings.workingHours.start">
+          </div>
+
+          <div class="form-group">
+            <label for="endTime">Bitmə Vaxtı</label>
+            <input 
+              type="time" 
+              id="endTime"
+              class="form-control"
+              [(ngModel)]="chatbotSettings.workingHours.end">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Avtomatik Cavab Növləri -->
+    <div class="card full-width">
+      <div class="card-header">
+        <h3><i class="fas fa-robot"></i> Avtomatik Cavab Növləri</h3>
+      </div>
+      <div class="card-content">
+        <div class="auto-response-list">
+          <div 
+            class="auto-response-item" 
+            *ngFor="let type of autoResponseTypes"
+            [class.disabled]="!type.enabled">
+            
+            <div class="response-info">
+              <div class="response-header">
+                <h4>{{ type.name }}</h4>
+                <label class="switch">
+                  <input type="checkbox" [checked]="type.enabled" (change)="toggleAutoResponse(type)">
+                  <span class="slider"></span>
+                </label>
+              </div>
+              <p class="response-description">{{ type.description }}</p>
+              
+              <div class="keywords">
+                <span class="keyword-label">Açar sözlər:</span>
+                <span class="keyword" *ngFor="let keyword of type.keywords">{{ keyword }}</span>
+              </div>
+              
+              <div class="response-preview">
+                <strong>Cavab:</strong>
+                <span>{{ type.response }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Cavab Şablonları -->
+    <div class="card full-width">
+      <div class="card-header">
+        <h3><i class="fas fa-comment-alt"></i> Cavab Şablonları</h3>
+        <button class="btn btn-primary btn-sm" (click)="showAddTemplate = true">
+          <i class="fas fa-plus"></i>
+          Yeni Şablon
+        </button>
+      </div>
+      <div class="card-content">
+        
+        <!-- Yeni Şablon Əlavə Et -->
+        <div class="add-template-form" *ngIf="showAddTemplate">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="newTrigger">Açar Söz</label>
+              <input 
+                type="text" 
+                id="newTrigger"
+                class="form-control"
+                [(ngModel)]="newTemplate.trigger"
+                placeholder="məs: salam, randevu">
+            </div>
+            
+            <div class="form-group">
+              <label for="newCategory">Kateqoriya</label>
+              <select id="newCategory" class="form-control" [(ngModel)]="newTemplate.category">
+                <option value="salamlama">Salamlama</option>
+                <option value="randevu">Randevu</option>
+                <option value="qiymet">Qiymət</option>
+                <option value="info">Məlumat</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="newResponse">Cavab Mətni</label>
+            <textarea 
+              id="newResponse"
+              class="form-control"
+              [(ngModel)]="newTemplate.response"
+              rows="3"
+              placeholder="Cavab mətnini daxil edin..."></textarea>
+          </div>
+
+          <div class="form-actions">
+            <button class="btn btn-primary" (click)="addTemplate()">
+              <i class="fas fa-save"></i>
+              Saxla
+            </button>
+            <button class="btn btn-secondary" (click)="showAddTemplate = false">
+              İmtina
+            </button>
+          </div>
+        </div>
+
+        <!-- Mövcud Şablonlar -->
+        <div class="template-list">
+          <div 
+            class="template-item" 
+            *ngFor="let template of responseTemplates"
+            [class.inactive]="!template.active">
+            
+            <div class="template-header">
+              <div class="template-info">
+                <span class="template-trigger">{{ template.trigger }}</span>
+                <span class="template-category">{{ template.category }}</span>
+              </div>
+              
+              <div class="template-actions">
+                <label class="switch">
+                  <input type="checkbox" [checked]="template.active" (change)="toggleTemplate(template)">
+                  <span class="slider"></span>
+                </label>
+                
+                <button class="btn btn-sm btn-outline" (click)="editTemplate(template)">
+                  <i class="fas fa-edit"></i>
+                </button>
+                
+                <button class="btn btn-sm btn-danger" (click)="deleteTemplate(template.id)">
+                  <i class="fas fa-trash"></i>
+                </button>
+              </div>
+            </div>
+            
+            <div class="template-response">
+              {{ template.response }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

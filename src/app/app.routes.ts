@@ -57,6 +57,13 @@ export const routes: Routes = [
     ]
   },
   { 
+    path: 'chatbot', 
+    component: DashboardComponent,
+    children: [
+      { path: '', loadComponent: () => import('./dashboard/chatbot/chatbot.component').then(m => m.ChatbotComponent) }
+    ]
+  },
+  { 
     path: 'doctors', 
     component: DashboardComponent,
     children: [

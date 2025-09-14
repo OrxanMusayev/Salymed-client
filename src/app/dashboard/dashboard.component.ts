@@ -13,7 +13,7 @@ import { SidebarComponent } from './sidebar/sidebar.component';
 export class DashboardComponent {
   isSidebarCollapsed = false;
 
-  onSidebarToggle(collapsed: boolean) {
-    this.isSidebarCollapsed = collapsed;
+  onSidebarToggle() {
+    this.isSidebarCollapsed = !this.isSidebarCollapsed;
   }
 }

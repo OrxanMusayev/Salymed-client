@@ -1,0 +1,536 @@
+<div class="doctors-container" [class.modal-blur]="showAddModal || showEditModal || showDeleteModal">
+  <!-- Header Section -->
+  <div class="page-header">
+    <div class="header-content">
+      <div class="title-section">
+        <h1 class="page-title">
+          <i class="fas fa-user-md"></i>
+          Həkimlər
+        </h1>
+        <p class="page-subtitle">Klinik doktorlarını yönetin və takip edin</p>
+      </div>
+      <button class="add-btn" (click)="openAddModal()">
+        <i class="fas fa-plus"></i>
+        <span>Yeni Həkim</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Filters Section -->
+  <div class="filters-card">
+    <div class="search-section">
+      <div class="search-input-wrapper">
+        <i class="fas fa-search search-icon"></i>
+        <input
+          type="text"
+          [(ngModel)]="searchTerm"
+          (input)="applyFilters()"
+          placeholder="Doktor adı, soyadı, ixtisas veya e-posta ara..."
+          class="search-input">
+        <button *ngIf="searchTerm" (click)="searchTerm = ''; applyFilters()" class="clear-search">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+    </div>
+
+    <div class="filter-controls">
+      <div class="filter-group">
+        <label class="filter-label">İxtisas</label>
+        <div class="select-wrapper">
+          <select [(ngModel)]="filterSpecialty" (change)="applyFilters()" class="filter-select">
+            <option value="all">Tümü</option>
+            <option *ngFor="let specialty of specialties" [value]="specialty">{{ specialty }}</option>
+          </select>
+          <i class="fas fa-chevron-down select-icon"></i>
+        </div>
+      </div>
+
+      <div class="filter-group">
+        <label class="filter-label">Təcrübə</label>
+        <div class="select-wrapper">
+          <select [(ngModel)]="filterExperience" (change)="applyFilters()" class="filter-select">
+            <option *ngFor="let range of experienceRanges" [value]="range.value">{{ range.label }}</option>
+          </select>
+          <i class="fas fa-chevron-down select-icon"></i>
+        </div>
+      </div>
+
+      <div class="filter-group">
+        <label class="filter-label">Reytinq</label>
+        <div class="select-wrapper">
+          <select [(ngModel)]="filterRating" (change)="applyFilters()" class="filter-select">
+            <option *ngFor="let rating of ratingRanges" [value]="rating.value">{{ rating.label }}</option>
+          </select>
+          <i class="fas fa-chevron-down select-icon"></i>
+        </div>
+      </div>
+
+      <div class="results-count">
+        <span class="count-text">{{ filteredDoctors.length }} doktor bulundu</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="loading-state">
+    <div class="loading-spinner">
+      <i class="fas fa-spinner fa-spin"></i>
+    </div>
+    <p class="loading-text">Doktorlar yükleniyor...</p>
+  </div>
+
+  <!-- Doctors Grid -->
+  <div class="doctors-grid" *ngIf="!isLoading && filteredDoctors.length > 0">
+    <div class="doctor-card" *ngFor="let doctor of filteredDoctors" [class.inactive]="!doctor.isActive">
+            <div class="card-header">
+        <div class="doctor-avatar" [style.background-color]="getAvatarColor(doctor)">
+          <img *ngIf="doctor.avatarUrl" [src]="doctor.avatarUrl" [alt]="doctor.firstName + ' ' + doctor.lastName">
+          <span *ngIf="!doctor.avatarUrl" class="avatar-initials">{{ getInitials(doctor) }}</span>
+        </div>
+        <div class="doctor-info">
+          <h3 class="doctor-name">{{ doctor.firstName }} {{ doctor.lastName }}</h3>
+          <p class="doctor-specialty">{{ doctor.specialty }}</p>
+          <div class="doctor-rating" *ngIf="doctor.rating">
+            <i class="fas fa-star" *ngFor="let star of [1,2,3,4,5]" 
+               [class.filled]="star <= doctor.rating"></i>
+            <span class="rating-text">({{ doctor.rating }}/5)</span>
+          </div>
+        </div>
+        <div class="dropdown-container">
+          <div class="action-btn" (click)="toggleDropdown(doctor.id, $event)">
+            <i class="fas fa-ellipsis-v"></i>
+          </div>
+          <div class="dropdown-menu" *ngIf="activeDropdown === doctor.id">
+            <button class="dropdown-item edit-item" (click)="openEditFromDropdown(doctor, $event)">
+              <i class="fas fa-edit"></i>
+              Düzenle
+            </button>
+            <button class="dropdown-item delete-item" (click)="deleteDoctor(doctor, $event)">
+              <i class="fas fa-trash"></i>
+              Sil
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card-body">
+        <div class="detail-grid">
+          <div class="detail-item" *ngIf="doctor.email">
+            <i class="fas fa-envelope detail-icon"></i>
+            <span class="detail-text">{{ doctor.email }}</span>
+          </div>
+          
+          <div class="detail-item" *ngIf="doctor.phone">
+            <i class="fas fa-phone detail-icon"></i>
+            <span class="detail-text">{{ doctor.phone }}</span>
+          </div>
+          
+          <div class="detail-item" *ngIf="doctor.yearsExperience">
+            <i class="fas fa-briefcase detail-icon"></i>
+            <span class="detail-text">{{ doctor.yearsExperience }} il təcrübə</span>
+          </div>
+          
+          <div class="detail-item" *ngIf="doctor.workingHours">
+            <i class="fas fa-clock detail-icon"></i>
+            <span class="detail-text">{{ doctor.workingHours }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Empty States -->
+  <div class="empty-state" *ngIf="!isLoading && filteredDoctors.length === 0 && doctors.length === 0">
+    <div class="empty-icon">
+      <i class="fas fa-user-md"></i>
+    </div>
+    <h3 class="empty-title">Henüz doktor eklenmemiş</h3>
+    <p class="empty-text">İlk doktorunuzu eklemek için yukarıdaki butona tıklayın</p>
+    <button class="empty-action-btn" (click)="openAddModal()">
+      <i class="fas fa-plus"></i>
+      İlk Doktoru Ekle
+    </button>
+  </div>
+
+  <div class="empty-state" *ngIf="!isLoading && filteredDoctors.length === 0 && doctors.length > 0">
+    <div class="empty-icon">
+      <i class="fas fa-search"></i>
+    </div>
+    <h3 class="empty-title">Arama kriterlerine uygun doktor bulunamadı</h3>
+    <p class="empty-text">Farklı arama terimleri veya filtreler deneyin</p>
+    <button class="empty-action-btn" (click)="searchTerm = ''; filterSpecialty = 'all'; filterExperience = 'all'; applyFilters()">
+      <i class="fas fa-undo"></i>
+      Filtreleri Temizle
+    </button>
+  </div>
+</div>
+
+<!-- Add Doctor Modal -->
+<div class="modal-overlay" *ngIf="showAddModal" (click)="closeAddModal()">
+  <div class="modal-container" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2 class="modal-title">
+        <i class="fas fa-user-plus"></i>
+        Yeni Doktor Ekle
+      </h2>
+      <button class="modal-close-btn" (click)="closeAddModal()">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+
+    <form class="modal-body" (ngSubmit)="saveDoctor()">
+      <div class="form-grid">
+        <div class="form-group full-width">
+          <label class="form-label">Profil Fotoğrafı</label>
+          <div class="photo-upload-container">
+            <div class="photo-preview" *ngIf="newDoctor.avatarUrl || selectedPhotoFile">
+              <img [src]="newDoctor.avatarUrl || selectedPhotoFile" alt="Profil fotoğrafı" class="preview-image">
+              <button type="button" class="remove-photo-btn" (click)="removePhoto()">
+                <i class="fas fa-times"></i>
+              </button>
+            </div>
+            <div class="photo-upload-area" *ngIf="!newDoctor.avatarUrl && !selectedPhotoFile" 
+                 (click)="photoInput.click()" (dragover)="onDragOver($event)" (drop)="onDrop($event)">
+              <i class="fas fa-camera upload-icon"></i>
+              <p class="upload-text">Fotoğraf yüklemek için tıklayın veya sürükleyin</p>
+              <p class="upload-hint">PNG, JPG veya JPEG (Maks. 5MB)</p>
+            </div>
+            <input #photoInput type="file" accept="image/*" (change)="onPhotoSelect($event)" class="photo-input">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="firstName">Ad *</label>
+          <input type="text" 
+                 id="firstName" 
+                 [(ngModel)]="newDoctor.firstName" 
+                 name="firstName" 
+                 required 
+                 placeholder="Doktor adı"
+                 class="form-input">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="lastName">Soyad *</label>
+          <input type="text" 
+                 id="lastName" 
+                 [(ngModel)]="newDoctor.lastName" 
+                 name="lastName" 
+                 required 
+                 placeholder="Doktor soyadı"
+                 class="form-input">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="email">E-posta *</label>
+          <input type="email" 
+                 id="email" 
+                 [(ngModel)]="newDoctor.email" 
+                 name="email" 
+                 required 
+                 placeholder="doktor@klinik.az"
+                 class="form-input">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="phone">Telefon *</label>
+          <input type="text" 
+                 id="phone" 
+                 [(ngModel)]="newDoctor.phone" 
+                 name="phone" 
+                 required 
+                 placeholder="+994 50 000 00 00"
+                 class="form-input">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="specialty">Uzmanlık Alanı *</label>
+          <div class="select-wrapper">
+            <select id="specialty" 
+                    [(ngModel)]="newDoctor.specialty" 
+                    name="specialty" 
+                    required 
+                    class="form-select">
+              <option value="">Uzmanlık alanı seçin</option>
+              <option *ngFor="let specialty of specialties" [value]="specialty">{{ specialty }}</option>
+            </select>
+            <i class="fas fa-chevron-down select-icon"></i>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="yearsExperience">Tecrübe Yılı</label>
+          <input type="number" 
+                 id="yearsExperience" 
+                 [(ngModel)]="newDoctor.yearsExperience" 
+                 name="yearsExperience" 
+                 min="0" 
+                 max="50" 
+                 placeholder="5"
+                 class="form-input">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="age">Yaş</label>
+          <input type="number" 
+                 id="age" 
+                 [(ngModel)]="newDoctor.age" 
+                 name="age" 
+                 min="18" 
+                 max="100" 
+                 placeholder="35"
+                 class="form-input">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="workingHours">Çalışma Saatleri</label>
+          <input type="text" 
+                 id="workingHours" 
+                 [(ngModel)]="newDoctor.workingHours" 
+                 name="workingHours" 
+                 placeholder="09:00-17:00"
+                 class="form-input">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="gender">Cinsiyet</label>
+          <div class="select-wrapper">
+            <select id="gender" 
+                    [(ngModel)]="newDoctor.gender" 
+                    name="gender" 
+                    class="form-select">
+              <option value="">Seçin</option>
+              <option value="Erkek">Erkek</option>
+              <option value="Kadın">Kadın</option>
+            </select>
+            <i class="fas fa-chevron-down select-icon"></i>
+          </div>
+        </div>
+
+        <div class="form-group full-width">
+          <label class="checkbox-label">
+            <input type="checkbox" 
+                   [(ngModel)]="newDoctor.isActive" 
+                   name="isActive"
+                   class="checkbox-input">
+            <span class="checkbox-custom"></span>
+            <span class="checkbox-text">Aktif doktor olarak ekle</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="closeAddModal()">
+          <i class="fas fa-times"></i>
+          İptal
+        </button>
+        <button type="submit" 
+                class="btn btn-primary" 
+                [disabled]="!isFormValid() || isSaving">
+          <i class="fas" [ngClass]="isSaving ? 'fa-spinner fa-spin' : 'fa-save'"></i>
+          <span>{{ isSaving ? 'Kaydediliyor...' : 'Kaydet' }}</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Edit Doctor Modal -->
+<div class="modal-overlay" *ngIf="showEditModal" (click)="closeEditModal()">
+  <div class="modal-container" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2 class="modal-title">
+        <i class="fas fa-user-edit"></i>
+        Doktor Düzenle
+      </h2>
+      <button class="modal-close-btn" (click)="closeEditModal()">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+
+    <form class="modal-body" (ngSubmit)="updateDoctor()">
+      <div class="form-grid">
+        <div class="form-group full-width">
+          <label class="form-label">Profil Fotoğrafı</label>
+          <div class="photo-upload-container">
+            <div class="photo-preview" *ngIf="selectedDoctor.avatarUrl || selectedEditPhotoFile">
+              <img [src]="selectedDoctor.avatarUrl || selectedEditPhotoFile" alt="Profil fotoğrafı" class="preview-image">
+              <button type="button" class="remove-photo-btn" (click)="removeEditPhoto()">
+                <i class="fas fa-times"></i>
+              </button>
+            </div>
+            <div class="photo-upload-area" *ngIf="!selectedDoctor.avatarUrl && !selectedEditPhotoFile" 
+                 (click)="editPhotoInput.click()" (dragover)="onDragOver($event)" (drop)="onEditDrop($event)">
+              <i class="fas fa-camera upload-icon"></i>
+              <p class="upload-text">Fotoğraf yüklemek için tıklayın veya sürükleyin</p>
+              <p class="upload-hint">PNG, JPG veya JPEG (Maks. 5MB)</p>
+            </div>
+            <input #editPhotoInput type="file" accept="image/*" (change)="onEditPhotoSelect($event)" class="photo-input">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="editFirstName">Ad *</label>
+          <input type="text" 
+                 id="editFirstName" 
+                 [(ngModel)]="selectedDoctor.firstName" 
+                 name="editFirstName" 
+                 required 
+                 placeholder="Doktor adı"
+                 class="form-input">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="editLastName">Soyad *</label>
+          <input type="text" 
+                 id="editLastName" 
+                 [(ngModel)]="selectedDoctor.lastName" 
+                 name="editLastName" 
+                 required 
+                 placeholder="Doktor soyadı"
+                 class="form-input">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="editEmail">E-posta *</label>
+          <input type="email" 
+                 id="editEmail" 
+                 [(ngModel)]="selectedDoctor.email" 
+                 name="editEmail" 
+                 required 
+                 placeholder="doktor@klinik.az"
+                 class="form-input">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="editPhone">Telefon *</label>
+          <input type="text" 
+                 id="editPhone" 
+                 [(ngModel)]="selectedDoctor.phone" 
+                 name="editPhone" 
+                 required 
+                 placeholder="+994 50 000 00 00"
+                 class="form-input">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="editSpecialty">Uzmanlık Alanı *</label>
+          <div class="select-wrapper">
+            <select id="editSpecialty" 
+                    [(ngModel)]="selectedDoctor.specialty" 
+                    name="editSpecialty" 
+                    required 
+                    class="form-select">
+              <option value="">Uzmanlık alanı seçin</option>
+              <option *ngFor="let specialty of specialties" [value]="specialty">{{ specialty }}</option>
+            </select>
+            <i class="fas fa-chevron-down select-icon"></i>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="editYearsExperience">Tecrübe Yılı</label>
+          <input type="number" 
+                 id="editYearsExperience" 
+                 [(ngModel)]="selectedDoctor.yearsExperience" 
+                 name="editYearsExperience" 
+                 min="0" 
+                 max="50" 
+                 placeholder="5"
+                 class="form-input">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="editAge">Yaş</label>
+          <input type="number" 
+                 id="editAge" 
+                 [(ngModel)]="selectedDoctor.age" 
+                 name="editAge" 
+                 min="18" 
+                 max="100" 
+                 placeholder="35"
+                 class="form-input">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="editWorkingHours">Çalışma Saatleri</label>
+          <input type="text" 
+                 id="editWorkingHours" 
+                 [(ngModel)]="selectedDoctor.workingHours" 
+                 name="editWorkingHours" 
+                 placeholder="09:00-17:00"
+                 class="form-input">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="editGender">Cinsiyet</label>
+          <div class="select-wrapper">
+            <select id="editGender" 
+                    [(ngModel)]="selectedDoctor.gender" 
+                    name="editGender" 
+                    class="form-select">
+              <option value="">Seçin</option>
+              <option value="Erkek">Erkek</option>
+              <option value="Kadın">Kadın</option>
+            </select>
+            <i class="fas fa-chevron-down select-icon"></i>
+          </div>
+        </div>
+
+        <div class="form-group full-width">
+          <label class="checkbox-label">
+            <input type="checkbox" 
+                   [(ngModel)]="selectedDoctor.isActive" 
+                   name="editIsActive"
+                   class="checkbox-input">
+            <span class="checkbox-custom"></span>
+            <span class="checkbox-text">Aktif doktor</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="closeEditModal()">
+          <i class="fas fa-times"></i>
+          İptal
+        </button>
+        <button type="submit" 
+                class="btn btn-primary" 
+                [disabled]="!isEditFormValid() || isSaving">
+          <i class="fas" [ngClass]="isSaving ? 'fa-spinner fa-spin' : 'fa-save'"></i>
+          <span>{{ isSaving ? 'Güncelleniyor...' : 'Güncelle' }}</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal-overlay delete-modal-overlay" *ngIf="showDeleteModal" (click)="closeDeleteModal()">
+  <div class="delete-modal-container" (click)="$event.stopPropagation()">
+    <div class="delete-modal-icon">
+      <i class="fas fa-exclamation-triangle"></i>
+    </div>
+    
+    <div class="delete-modal-content">
+      <h3 class="delete-modal-title">Doktoru Sil</h3>
+      <p class="delete-modal-message" *ngIf="doctorToDelete">
+        <strong>{{ doctorToDelete.firstName }} {{ doctorToDelete.lastName }}</strong> doktorunu silmek istediğinizden emin misiniz?
+      </p>
+      <p class="delete-modal-warning">
+        Bu işlem geri alınamaz.
+      </p>
+    </div>
+
+    <div class="delete-modal-actions">
+      <button class="btn btn-cancel" (click)="closeDeleteModal()" [disabled]="isSaving">
+        <i class="fas fa-times"></i>
+        İptal
+      </button>
+      <button class="btn btn-danger" (click)="confirmDelete()" [disabled]="isSaving">
+        <i class="fas" [ngClass]="isSaving ? 'fa-spinner fa-spin' : 'fa-trash'"></i>
+        <span>{{ isSaving ? 'Siliniyor...' : 'Sil' }}</span>
+      </button>
+    </div>
+  </div>
+</div>

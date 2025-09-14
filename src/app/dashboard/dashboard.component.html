@@ -1,27 +1,10 @@
 <div class="dashboard-layout">
   <app-sidebar 
-    [collapsed]="isSidebarCollapsed"
-    (toggleSidebar)="onSidebarToggle($event)">
+    [class.collapsed]="isSidebarCollapsed"
+    (sidebarToggle)="onSidebarToggle()">
   </app-sidebar>
-  
-  <main class="main-content" [class.sidebar-collapsed]="isSidebarCollapsed">
-    <div class="content-header">
-      <div class="header-left">
-        <h1 class="page-title">Dashboard</h1>
-        <p class="page-subtitle">Xoş gəlmisiniz! Kliniki idarə paneli</p>
-      </div>
-      <div class="header-right">
-        <div class="user-menu">
-          <div class="user-avatar">
-            <i class="fas fa-user"></i>
-          </div>
-          <span class="user-name">Admin</span>
-        </div>
-      </div>
-    </div>
 
-    <div class="content-body">
-      <router-outlet></router-outlet>
-    </div>
-  </main>
+  <div class="main-content" [class.sidebar-collapsed]="isSidebarCollapsed">
+    <router-outlet></router-outlet>
+  </div>
 </div>

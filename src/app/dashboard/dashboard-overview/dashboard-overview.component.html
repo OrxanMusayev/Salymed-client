@@ -1,0 +1,164 @@
+<div class="dashboard-page">
+  <div class="page-header">
+    <div class="header-content">
+      <h1>İdarə Paneli</h1>
+      <button (click)="refreshData()" class="refresh-btn" [disabled]="loading">
+        <i class="fas fa-sync-alt" [class.spin]="loading"></i>
+        Yenile
+      </button>
+    </div>
+  </div>
+
+  <div class="main-content">
+    <!-- İstatistik Kartları -->
+    <div class="stats-section">
+      <div class="section-header">
+        <h3>İstatistiklər</h3>
+      </div>
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon">
+            <i class="fas fa-calendar-check"></i>
+          </div>
+          <div class="stat-content">
+            <h3>{{ dashboardStats.totalAppointments }}</h3>
+            <p>Toplam Randevu</p>
+          </div>
+        </div>
+
+        <div class="stat-card highlight">
+          <div class="stat-icon">
+            <i class="fas fa-robot"></i>
+          </div>
+          <div class="stat-content">
+            <h3>{{ dashboardStats.autoScheduledAppointments }}</h3>
+            <p>Otomatik Randevu</p>
+            <span class="percentage">{{ getAutoAppointmentPercentage() }}%</span>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon">
+            <i class="fas fa-users"></i>
+          </div>
+          <div class="stat-content">
+            <h3>{{ dashboardStats.totalPatients }}</h3>
+            <p>Toplam Hasta</p>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon">
+            <i class="fas fa-calendar-day"></i>
+          </div>
+          <div class="stat-content">
+            <h3>{{ dashboardStats.todayAppointments }}</h3>
+            <p>Bugünkü Randevular</p>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon">
+            <i class="fas fa-calendar-week"></i>
+          </div>
+          <div class="stat-content">
+            <h3>{{ dashboardStats.weeklyAppointments }}</h3>
+            <p>Haftalık Randevu</p>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon">
+            <i class="fas fa-dollar-sign"></i>
+          </div>
+          <div class="stat-content">
+            <h3>{{ dashboardStats.monthlyRevenue | number:'1.0-0' }} ₺</h3>
+            <p>Aylık Gelir</p>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon">
+            <i class="fas fa-user-md"></i>
+          </div>
+          <div class="stat-content">
+            <h3>{{ dashboardStats.activeDoctors }}</h3>
+            <p>Aktif Doktor</p>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon">
+            <i class="fas fa-hand-paper"></i>
+          </div>
+          <div class="stat-content">
+            <h3>{{ dashboardStats.manualAppointments }}</h3>
+            <p>Manuel Randevu</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Ana İçerik Grid -->
+    <div class="content-grid">
+      <!-- Haftalık Trend Grafiği -->
+      <div class="chart-card">
+        <h3>Haftalık Randevu Trendi</h3>
+        <div class="chart-container">
+          <div class="chart-bars">
+            <div *ngFor="let day of weeklyTrend" class="chart-bar">
+              <div class="bar-container">
+                <div class="bar manual" [style.height.%]="(day.appointments - day.autoAppointments) * 3"></div>
+                <div class="bar auto" [style.height.%]="day.autoAppointments * 3"></div>
+              </div>
+              <span class="day-label">{{ day.day }}</span>
+              <span class="count-label">{{ day.appointments }}</span>
+            </div>
+          </div>
+          <div class="chart-legend">
+            <div class="legend-item">
+              <div class="legend-color auto"></div>
+              <span>Otomatik</span>
+            </div>
+            <div class="legend-item">
+              <div class="legend-color manual"></div>
+              <span>Manuel</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Son Randevular -->
+      <div class="recent-appointments-card">
+        <h3>Son Randevular</h3>
+        <div class="appointments-list">
+          <div *ngFor="let appointment of recentAppointments" class="appointment-item">
+            <div class="appointment-info">
+              <div class="patient-name">{{ appointment.patientName }}</div>
+              <div class="appointment-details">
+                <span class="doctor">{{ appointment.doctorName }}</span>
+                <span class="datetime">{{ appointment.date }} - {{ appointment.time }}</span>
+              </div>
+            </div>
+            <div class="appointment-meta">
+              <span class="appointment-type" [class]="'type-' + appointment.type">
+                {{ getAppointmentTypeText(appointment.type) }}
+              </span>
+              <span class="appointment-status" [class]="getStatusClass(appointment.status)">
+                {{ getStatusText(appointment.status) }}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Yükleme Overlay -->
+  <div *ngIf="loading" class="loading-overlay">
+    <div class="loading-spinner">
+      <i class="fas fa-spinner fa-spin"></i>
+      <p>Veriler yükleniyor...</p>
+    </div>
+  </div>
+</div>

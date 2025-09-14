@@ -25,13 +25,49 @@ export const routes: Routes = [
     path: 'dashboard', 
     component: DashboardComponent,
     children: [
-      { path: '', redirectTo: 'overview', pathMatch: 'full' },
-      { path: 'overview', loadComponent: () => import('./dashboard/overview/overview.component').then(m => m.OverviewComponent) },
-      { path: 'account', loadComponent: () => import('./dashboard/account/account.component').then(m => m.AccountComponent) },
-      { path: 'clinic-info', loadComponent: () => import('./dashboard/clinic-info/clinic-info.component').then(m => m.ClinicInfoComponent) },
-      { path: 'subscription', loadComponent: () => import('./dashboard/subscription/subscription.component').then(m => m.SubscriptionComponent) },
-      { path: 'automation', loadComponent: () => import('./dashboard/automation/automation.component').then(m => m.AutomationComponent) },
-      { path: 'doctors', loadComponent: () => import('./dashboard/doctors/doctors.component').then(m => m.DoctorsComponent) }
+      { path: '', loadComponent: () => import('./dashboard/dashboard-overview/dashboard-overview.component').then(m => m.DashboardOverviewComponent) }
+    ]
+  },
+  { 
+    path: 'account', 
+    component: DashboardComponent,
+    children: [
+      { path: '', loadComponent: () => import('./dashboard/account/account.component').then(m => m.AccountComponent) }
+    ]
+  },
+  { 
+    path: 'clinic-info', 
+    component: DashboardComponent,
+    children: [
+      { path: '', loadComponent: () => import('./dashboard/clinic-info/clinic-info.component').then(m => m.ClinicInfoComponent) }
+    ]
+  },
+  { 
+    path: 'subscription', 
+    component: DashboardComponent,
+    children: [
+      { path: '', loadComponent: () => import('./dashboard/subscription/subscription.component').then(m => m.SubscriptionComponent) }
+    ]
+  },
+  { 
+    path: 'automation', 
+    component: DashboardComponent,
+    children: [
+      { path: '', loadComponent: () => import('./dashboard/automation/automation.component').then(m => m.AutomationComponent) }
+    ]
+  },
+  { 
+    path: 'doctors', 
+    component: DashboardComponent,
+    children: [
+      { path: '', loadComponent: () => import('./dashboard/doctors/doctors.component').then(m => m.DoctorsComponent) }
+    ]
+  },
+  { 
+    path: 'overview', 
+    component: DashboardComponent,
+    children: [
+      { path: '', loadComponent: () => import('./dashboard/overview/overview.component').then(m => m.OverviewComponent) }
     ]
   },
   { path: '**', redirectTo: '' }

@@ -1,73 +1,91 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
-
-interface MenuItem {
-  id: string;
-  label: string;
-  icon: string;
-  route: string;
-  isActive?: boolean;
-}
+import { Router, NavigationEnd, RouterModule } from '@angular/router';
+import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-sidebar',
-  standalone: true,
-  imports: [CommonModule, RouterModule],
   templateUrl: './sidebar.component.html',
-  styleUrls: ['./sidebar.component.scss']
+  styleUrls: ['./sidebar.component.scss'],
+  standalone: true,
+  imports: [CommonModule, RouterModule]
 })
-export class SidebarComponent {
-  @Input() collapsed = false;
-  @Output() toggleSidebar = new EventEmitter<boolean>();
+export class SidebarComponent implements OnInit {
+  isCollapsed = false;
+  activeMenuItem = 'dashboard-overview';
+  @Output() sidebarToggle = new EventEmitter<void>();
 
-  menuItems: MenuItem[] = [
+  menuItems = [
     {
-      id: 'dashboard',
-      label: 'Dashboard',
-      icon: 'fas fa-chart-line',
-      route: '/dashboard/overview',
-      isActive: true
-    },
-    {
-      id: 'account',
-      label: 'Hesabım',
-      icon: 'fas fa-user',
-      route: '/dashboard/account'
-    },
-    {
-      id: 'clinic-info',
-      label: 'Klinik Məlumatları',
-      icon: 'fas fa-hospital',
-      route: '/dashboard/clinic-info'
-    },
-    {
-      id: 'subscription',
-      label: 'Abunəliyim',
-      icon: 'fas fa-credit-card',
-      route: '/dashboard/subscription'
-    },
-    {
-      id: 'automation',
-      label: 'Görüşlərin Avtomatlaşdırılması',
-      icon: 'fas fa-robot',
-      route: '/dashboard/automation'
+      id: 'dashboard-overview',
+      label: 'Gösterge Paneli',
+      icon: 'fas fa-tachometer-alt',
+      route: '/dashboard'
     },
     {
       id: 'doctors',
-      label: 'Həkimlər',
+      label: 'Doktorlar',
       icon: 'fas fa-user-md',
-      route: '/dashboard/doctors'
+      route: '/doctors'
+    },
+    {
+      id: 'overview',
+      label: 'Genel Bakış',
+      icon: 'fas fa-chart-bar',
+      route: '/overview'
+    },
+    {
+      id: 'account',
+      label: 'Hesap',
+      icon: 'fas fa-user',
+      route: '/account'
+    },
+    {
+      id: 'automation',
+      label: 'Otomasyon',
+      icon: 'fas fa-robot',
+      route: '/automation'
+    },
+    {
+      id: 'subscription',
+      label: 'Abonelik',
+      icon: 'fas fa-credit-card',
+      route: '/subscription'
+    },
+    {
+      id: 'clinic-info',
+      label: 'Klinik Bilgisi',
+      icon: 'fas fa-hospital',
+      route: '/clinic-info'
     }
   ];
 
-  toggleSidebarState() {
-    this.collapsed = !this.collapsed;
-    this.toggleSidebar.emit(this.collapsed);
+  constructor(private router: Router) {}
+
+  ngOnInit() {
+    this.setActiveMenuItem(this.router.url);
+    
+    this.router.events.pipe(
+      filter((event: any) => event instanceof NavigationEnd)
+    ).subscribe((event: NavigationEnd) => {
+      this.setActiveMenuItem(event.url);
+    });
   }
 
-  selectMenuItem(item: MenuItem) {
-    this.menuItems.forEach(menuItem => menuItem.isActive = false);
-    item.isActive = true;
+  setActiveMenuItem(url: string) {
+    const matchedItem = this.menuItems.find(item => url.startsWith(item.route));
+    if (matchedItem) {
+      this.activeMenuItem = matchedItem.id;
+    }
+  }
+
+  toggleSidebar() {
+    this.isCollapsed = !this.isCollapsed;
+    this.sidebarToggle.emit();
+  }
+
+  selectMenuItem(item: any) {
+    this.activeMenuItem = item.id;
+    this.router.navigate([item.route]);
   }
 }

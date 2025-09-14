@@ -1,0 +1,94 @@
+<div class="overview-container">
+  <div class="page-header">
+    <h2 class="page-title">Dashboard Ümumilikdə</h2>
+    <p class="page-subtitle">Klinik fəaliyyətinin ümumi görünüşü</p>
+  </div>
+
+  <!-- Statistics Cards -->
+  <div class="stats-grid">
+    <div 
+      class="stat-card" 
+      *ngFor="let stat of stats"
+      [class]="'stat-' + stat.color">
+      <div class="stat-content">
+        <div class="stat-header">
+          <h3 class="stat-title">{{ stat.title }}</h3>
+          <div class="stat-icon">
+            <i [class]="stat.icon"></i>
+          </div>
+        </div>
+        <div class="stat-body">
+          <div class="stat-value">{{ stat.value }}</div>
+          <div class="stat-change positive">
+            <i class="fas fa-arrow-up"></i>
+            {{ stat.change }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Recent Activity -->
+  <div class="content-grid">
+    <!-- Recent Appointments -->
+    <div class="content-card">
+      <div class="card-header">
+        <h3 class="card-title">
+          <i class="fas fa-calendar-alt"></i>
+          Son Görüşlər
+        </h3>
+        <a href="#" class="card-action">Hamısını gör</a>
+      </div>
+      <div class="card-body">
+        <div class="appointment-list">
+          <div 
+            class="appointment-item" 
+            *ngFor="let appointment of recentAppointments">
+            <div class="appointment-info">
+              <div class="patient-name">{{ appointment.patient }}</div>
+              <div class="doctor-name">{{ appointment.doctor }}</div>
+            </div>
+            <div class="appointment-meta">
+              <div class="appointment-time">{{ appointment.time }}</div>
+              <span 
+                class="appointment-status"
+                [class]="'status-' + appointment.status">
+                {{ appointment.status === 'confirmed' ? 'Təsdiqləndi' : 'Gözləyir' }}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="content-card">
+      <div class="card-header">
+        <h3 class="card-title">
+          <i class="fas fa-bolt"></i>
+          Tez Əməliyyatlar
+        </h3>
+      </div>
+      <div class="card-body">
+        <div class="quick-actions">
+          <button class="action-btn primary">
+            <i class="fas fa-plus"></i>
+            Yeni Görüş
+          </button>
+          <button class="action-btn secondary">
+            <i class="fas fa-user-plus"></i>
+            Həkim Əlavə Et
+          </button>
+          <button class="action-btn tertiary">
+            <i class="fas fa-chart-bar"></i>
+            Hesabat Yarat
+          </button>
+          <button class="action-btn quaternary">
+            <i class="fas fa-cog"></i>
+            Tənzimləmələr
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

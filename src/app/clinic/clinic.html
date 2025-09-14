@@ -1,0 +1,282 @@
+<div class="clinic-page">
+  <!-- Header -->
+  <header class="clinic-header">
+    <div class="container">
+      <div class="header-content">
+        <div class="header-left">
+          <h1>Klinik Yönetimi</h1>
+          <p>Kliniklerinizi yönetin ve yeni klinik ekleyin</p>
+        </div>
+        <div class="header-actions">
+          <button class="btn secondary" (click)="refreshClinics()">
+            <i class="fas fa-sync-alt" [class.fa-spin]="isLoading"></i>
+            Yenile
+          </button>
+          <button class="btn primary" (click)="openAddClinicModal()">
+            <i class="fas fa-plus"></i>
+            Yeni Klinik
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="clinic-content">
+    <div class="container">
+      <!-- Search and Filter -->
+      <div class="search-section">
+        <div class="search-wrapper">
+          <div class="search-input-wrapper">
+            <input
+              type="text"
+              class="form-input search-input"
+              placeholder="Klinik ara..."
+              [(ngModel)]="searchTerm"
+              (input)="filterClinics()"
+            />
+            <i class="fas fa-search search-icon"></i>
+          </div>
+          <div class="filter-wrapper">
+            <select class="form-select" [(ngModel)]="statusFilter" (change)="filterClinics()">
+              <option value="">Tüm Durumlar</option>
+              <option value="active">Aktif</option>
+              <option value="inactive">Pasif</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Clinics Grid -->
+      <div class="clinics-section">
+        <div class="section-header">
+          <h2>Kliniklerim ({{ filteredClinics.length }})</h2>
+        </div>
+
+        <div class="clinics-grid" *ngIf="filteredClinics.length > 0; else noClinics">
+          <div class="clinic-card card" *ngFor="let clinic of filteredClinics">
+            <div class="clinic-card-header">
+              <div class="clinic-info">
+                <h3>{{ clinic.name }}</h3>
+                <p class="clinic-address">
+                  <i class="fas fa-map-marker-alt"></i>
+                  {{ clinic.address }}
+                </p>
+              </div>
+              <div class="clinic-status">
+                <span 
+                  class="status-badge" 
+                  [class.active]="clinic.isActive"
+                  [class.inactive]="!clinic.isActive"
+                >
+                  {{ clinic.isActive ? 'Aktif' : 'Pasif' }}
+                </span>
+              </div>
+            </div>
+
+            <div class="clinic-card-body">
+              <div class="clinic-details">
+                <div class="detail-item" *ngIf="clinic.phoneNumber">
+                  <i class="fas fa-phone"></i>
+                  <span>{{ clinic.phoneNumber }}</span>
+                </div>
+                <div class="detail-item" *ngIf="clinic.email">
+                  <i class="fas fa-envelope"></i>
+                  <span>{{ clinic.email }}</span>
+                </div>
+                <div class="detail-item" *ngIf="clinic.city">
+                  <i class="fas fa-city"></i>
+                  <span>{{ clinic.city }}</span>
+                </div>
+              </div>
+
+              <div class="clinic-description" *ngIf="clinic.description">
+                <p>{{ clinic.description }}</p>
+              </div>
+
+              <div class="clinic-meta">
+                <div class="meta-item">
+                  <span class="meta-label">Oluşturulma:</span>
+                  <span class="meta-value">{{ formatDate(clinic.createdAt) }}</span>
+                </div>
+                <div class="meta-item" *ngIf="clinic.updatedAt">
+                  <span class="meta-label">Güncelleme:</span>
+                  <span class="meta-value">{{ formatDate(clinic.updatedAt) }}</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="clinic-card-footer">
+              <button class="btn secondary" (click)="editClinic(clinic)">
+                <i class="fas fa-edit"></i>
+                Düzenle
+              </button>
+              <button class="btn accent" (click)="viewClinicDetails(clinic)">
+                <i class="fas fa-eye"></i>
+                Detaylar
+              </button>
+              <button 
+                class="btn danger" 
+                (click)="deleteClinic(clinic)"
+                [disabled]="isDeleting"
+              >
+                <i class="fas fa-trash"></i>
+                Sil
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- No Clinics State -->
+        <ng-template #noClinics>
+          <div class="no-clinics">
+            <div class="no-clinics-icon">
+              <i class="fas fa-hospital"></i>
+            </div>
+            <h3>Henüz klinik eklenmemiş</h3>
+            <p>İlk kliniğinizi ekleyerek başlayın</p>
+            <button class="btn primary" (click)="openAddClinicModal()">
+              <i class="fas fa-plus"></i>
+              İlk Kliniği Ekle
+            </button>
+          </div>
+        </ng-template>
+      </div>
+    </div>
+  </main>
+
+  <!-- Add/Edit Clinic Modal -->
+  <div class="modal-overlay" *ngIf="showModal" (click)="closeModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>{{ isEditMode ? 'Klinik Düzenle' : 'Yeni Klinik Ekle' }}</h3>
+        <button class="modal-close" (click)="closeModal()">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+
+      <form class="clinic-form" (ngSubmit)="saveClinic()" #clinicForm="ngForm">
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="name">Klinik Adı *</label>
+            <input
+              type="text"
+              id="name"
+              name="name"
+              class="form-input"
+              placeholder="Klinik adını giriniz"
+              [(ngModel)]="currentClinic.name"
+              required
+              #name="ngModel"
+            />
+            <div class="validation-error" *ngIf="name.invalid && name.touched">
+              <i class="fas fa-exclamation-circle"></i>
+              Klinik adı gereklidir
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="address">Adres *</label>
+            <input
+              type="text"
+              id="address"
+              name="address"
+              class="form-input"
+              placeholder="Klinik adresi"
+              [(ngModel)]="currentClinic.address"
+              required
+              #address="ngModel"
+            />
+            <div class="validation-error" *ngIf="address.invalid && address.touched">
+              <i class="fas fa-exclamation-circle"></i>
+              Adres gereklidir
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="phoneNumber">Telefon</label>
+            <input
+              type="tel"
+              id="phoneNumber"
+              name="phoneNumber"
+              class="form-input"
+              placeholder="(555) 123-4567"
+              [(ngModel)]="currentClinic.phoneNumber"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="email">E-posta</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              class="form-input"
+              placeholder="ornek@email.com"
+              [(ngModel)]="currentClinic.email"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="city">Şehir</label>
+            <input
+              type="text"
+              id="city"
+              name="city"
+              class="form-input"
+              placeholder="Şehir"
+              [(ngModel)]="currentClinic.city"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="website">Website</label>
+            <input
+              type="url"
+              id="website"
+              name="website"
+              class="form-input"
+              placeholder="https://www.klinik.com"
+              [(ngModel)]="currentClinic.website"
+            />
+          </div>
+        </div>
+
+        <div class="form-group full-width">
+          <label for="description">Açıklama</label>
+          <textarea
+            id="description"
+            name="description"
+            class="form-textarea"
+            rows="4"
+            placeholder="Klinik hakkında açıklama..."
+            [(ngModel)]="currentClinic.description"
+          ></textarea>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn secondary" (click)="closeModal()">
+            İptal
+          </button>
+          <button 
+            type="submit" 
+            class="btn primary" 
+            [disabled]="clinicForm.invalid || isSaving"
+          >
+            <i *ngIf="isSaving" class="fas fa-spinner fa-spin"></i>
+            <i *ngIf="!isSaving" class="fas fa-save"></i>
+            {{ isSaving ? 'Kaydediliyor...' : (isEditMode ? 'Güncelle' : 'Kaydet') }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Loading Overlay -->
+  <div class="loading-overlay" *ngIf="isLoading">
+    <div class="loading-spinner">
+      <i class="fas fa-spinner fa-spin"></i>
+      <p>Veriler yükleniyor...</p>
+    </div>
+  </div>
+</div>

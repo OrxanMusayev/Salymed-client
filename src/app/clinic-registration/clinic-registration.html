@@ -1,0 +1,316 @@
+<div class="registration-page">
+  <div class="registration-container">
+    <!-- Sliding Cards Container -->
+    <div class="cards-container" [class.slide-left]="currentStep === 2">
+      
+      <!-- Step 1: Clinic Information -->
+      <div class="registration-card clinic-card">
+        <!-- Left Side - Branding -->
+        <div class="registration-brand">
+          <div class="brand-content">
+            <div class="brand-logo">
+              <h1><i class="fas fa-hospital-alt"></i> Salymed</h1>
+            </div>
+            
+            <h2 class="brand-title">Klinik Qeydiyyatı</h2>
+            <p class="brand-description">
+              Müasir həkim idarəetmə sistemimizə qoşularaq klinik fəaliyyətinizi daha səmərəli idarə edin.
+            </p>
+            
+            <div class="brand-features">
+              <div class="feature-item">
+                <div class="feature-icon">✓</div>
+                <span>Müasir həkim idarəetmə sistemi</span>
+              </div>
+              <div class="feature-item">
+                <div class="feature-icon">✓</div>
+                <span>Təhlükəsiz məlumat saxlanması</span>
+              </div>
+              <div class="feature-item">
+                <div class="feature-icon">✓</div>
+                <span>24/7 dəstək xidməti</span>
+              </div>
+              <div class="feature-item">
+                <div class="feature-icon">✓</div>
+                <span>Asanlıqla istifadə</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Side - Clinic Form -->
+        <div class="registration-form-section">
+          <div class="form-header">
+            <div class="step-tag">Addım 1</div>
+            <button class="back-button" (click)="goBack()" type="button">
+              ✕
+            </button>
+            <h1 class="form-title">Klinik Məlumatları</h1>
+            <p class="form-subtitle">
+              Klinik məlumatlarınızı daxil edərək qeydiyyat prosesini başladın
+            </p>
+          </div>
+
+          <form class="registration-form" (ngSubmit)="nextStep()" #clinicForm="ngForm">
+            <div class="form-group">
+              <label for="clinicName">Klinik Adı *</label>
+              <div class="input-group">
+                <input
+                  type="text"
+                  id="clinicName"
+                  name="clinicName"
+                  [(ngModel)]="clinicData.clinicName"
+                  placeholder="Klinik adınızı daxil edin"
+                  required
+                  #clinicName="ngModel"
+                  [class.error]="clinicName.invalid && clinicName.touched">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="address">Ünvan *</label>
+              <div class="input-group">
+                <input
+                  type="text"
+                  id="address"
+                  name="address"
+                  [(ngModel)]="clinicData.address"
+                  placeholder="Klinik ünvanını daxil edin"
+                  required
+                  #address="ngModel"
+                  [class.error]="address.invalid && address.touched">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>Telefon Nömrəsi *</label>
+              <div class="input-group">
+                <div class="phone-input-wrapper">
+                  <div class="country-select">
+                    <button
+                      type="button"
+                      class="country-button"
+                      [class.open]="isCountryDropdownOpen"
+                      (click)="toggleCountryDropdown()">
+                      <div class="country-info">
+                        <span class="dial-code">{{ selectedCountry.dialCode }}</span>
+                      </div>
+                      <span class="dropdown-arrow" [class.open]="isCountryDropdownOpen">▼</span>
+                    </button>
+                    
+                    <div class="country-dropdown" *ngIf="isCountryDropdownOpen">
+                      <div
+                        class="country-option"
+                        *ngFor="let country of countries"
+                        (click)="selectCountry(country)">
+                        <span class="country-name">{{ country.name }}</span>
+                        <span class="dial-code">{{ country.dialCode }}</span>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <input
+                    type="tel"
+                    class="phone-input"
+                    name="phone"
+                    [(ngModel)]="clinicData.phone"
+                    placeholder="Telefon nömrəsi"
+                    required
+                    #phone="ngModel"
+                    [class.error]="phone.invalid && phone.touched"
+                    (keypress)="onPhoneKeyPress($event)"
+                    pattern="[0-9]*">
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="email">E-mail *</label>
+              <div class="input-group">
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  [(ngModel)]="clinicData.email"
+                  placeholder="E-mail ünvanınızı daxil edin"
+                  required
+                  email
+                  #email="ngModel"
+                  [class.error]="email.invalid && email.touched">
+              </div>
+              <div *ngIf="email.invalid && email.touched" class="error-message">
+                <span *ngIf="email.errors?.['required']">E-mail tələb olunur</span>
+                <span *ngIf="email.errors?.['email']">Düzgün e-mail formatı daxil edin</span>
+              </div>
+            </div>
+
+            <div class="form-actions">
+              <button
+                type="submit"
+                class="submit-button"
+                [disabled]="!isStep1Valid()">
+                Növbəti Addım
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- Step 2: Admin Information -->
+      <div class="registration-card admin-card">
+        <!-- Left Side - Admin Branding -->
+        <div class="registration-brand">
+          <div class="brand-content">
+            <div class="brand-logo">
+              <h1><i class="fas fa-user-shield"></i> Salymed</h1>
+            </div>
+            
+            <h2 class="brand-title">İdarəçi Məlumatları</h2>
+            <p class="brand-description">
+              Klinik idarəçisinin məlumatlarını daxil edərək qeydiyyat prosesini tamamlayın.
+            </p>
+            
+            <div class="brand-features">
+              <div class="feature-item">
+                <div class="feature-icon">✓</div>
+                <span>Təhlükəsiz istifadəçi hesabı</span>
+              </div>
+              <div class="feature-item">
+                <div class="feature-icon">✓</div>
+                <span>İdarəetmə hüquqları</span>
+              </div>
+              <div class="feature-item">
+                <div class="feature-icon">✓</div>
+                <span>Şəxsi profil tənzimləmələri</span>
+              </div>
+              <div class="feature-item">
+                <div class="feature-icon">✓</div>
+                <span>Məlumatların qorunması</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Side - Admin Form -->
+        <div class="registration-form-section">
+          <div class="form-header">
+            <div class="step-tag">Addım 2</div>
+            <button class="back-button" (click)="previousStep()" type="button">
+              ←
+            </button>
+            <h1 class="form-title">İdarəçi Məlumatları</h1>
+            <p class="form-subtitle">
+              Klinik idarəçisinin məlumatlarını daxil edin
+            </p>
+          </div>
+
+          <form class="registration-form" (ngSubmit)="completeRegistration()" #adminForm="ngForm">
+            <div class="form-group">
+              <label for="firstName">Ad *</label>
+              <div class="input-group">
+                <input
+                  type="text"
+                  id="firstName"
+                  name="firstName"
+                  [(ngModel)]="adminData.firstName"
+                  placeholder="Adınızı daxil edin"
+                  required
+                  #firstName="ngModel"
+                  [class.error]="firstName.invalid && firstName.touched">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="lastName">Soyad *</label>
+              <div class="input-group">
+                <input
+                  type="text"
+                  id="lastName"
+                  name="lastName"
+                  [(ngModel)]="adminData.lastName"
+                  placeholder="Soyadınızı daxil edin"
+                  required
+                  #lastName="ngModel"
+                  [class.error]="lastName.invalid && lastName.touched">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="adminEmail">E-mail *</label>
+              <div class="input-group">
+                <input
+                  type="email"
+                  id="adminEmail"
+                  name="adminEmail"
+                  [(ngModel)]="adminData.email"
+                  placeholder="E-mail ünvanınızı daxil edin"
+                  required
+                  email
+                  #adminEmail="ngModel"
+                  [class.error]="adminEmail.invalid && adminEmail.touched">
+              </div>
+              <div *ngIf="adminEmail.invalid && adminEmail.touched" class="error-message">
+                <span *ngIf="adminEmail.errors?.['required']">E-mail tələb olunur</span>
+                <span *ngIf="adminEmail.errors?.['email']">Düzgün e-mail formatı daxil edin</span>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="password">Şifrə *</label>
+              <div class="input-group">
+                <input
+                  type="password"
+                  id="password"
+                  name="password"
+                  [(ngModel)]="adminData.password"
+                  placeholder="Güclü şifrə yaradın"
+                  required
+                  minlength="6"
+                  #password="ngModel"
+                  [class.error]="password.invalid && password.touched">
+              </div>
+              <div *ngIf="password.invalid && password.touched" class="error-message">
+                <span *ngIf="password.errors?.['required']">Şifrə tələb olunur</span>
+                <span *ngIf="password.errors?.['minlength']">Şifrə minimum 6 simvol olmalıdır</span>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="confirmPassword">Şifrəni Təsdiqlə *</label>
+              <div class="input-group">
+                <input
+                  type="password"
+                  id="confirmPassword"
+                  name="confirmPassword"
+                  [(ngModel)]="adminData.confirmPassword"
+                  placeholder="Şifrəni təkrar daxil edin"
+                  required
+                  #confirmPassword="ngModel"
+                  [class.error]="confirmPassword.invalid && confirmPassword.touched || !passwordsMatch()">
+              </div>
+              <div *ngIf="(confirmPassword.invalid && confirmPassword.touched) || (!passwordsMatch() && confirmPassword.touched)" class="error-message">
+                <span *ngIf="confirmPassword.errors?.['required']">Şifrə təsdiqi tələb olunur</span>
+                <span *ngIf="!passwordsMatch() && confirmPassword.touched">Şifrələr uyğun gəlmir</span>
+              </div>
+            </div>
+
+            <div class="form-actions">
+              <button
+                type="button"
+                class="secondary-button"
+                (click)="previousStep()">
+                Geri
+              </button>
+              <button
+                type="submit"
+                class="submit-button"
+                [disabled]="!isStep2Valid()">
+                Qeydiyyatı Tamamla
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

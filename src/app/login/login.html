@@ -1,0 +1,136 @@
+<div class="login-page">
+  <div class="login-container">
+    <!-- Left Side - Branding -->
+    <div class="login-brand">
+      <div class="brand-content">
+        <div class="brand-logo">
+          <h1><i class="fas fa-hospital-alt"></i> Salymed</h1>
+        </div>
+        <h2 class="brand-title">Sağlık Yönetimine Hoş Geldiniz</h2>
+        <p class="brand-description">
+          Modern ve güvenli sağlık yönetim sistemimizle kliniklerinizi 
+          daha verimli bir şekilde yönetin.
+        </p>
+        <div class="brand-features">
+          <div class="feature-item">
+            <i class="fas fa-check-circle"></i>
+            <span>Güvenli Veri Yönetimi</span>
+          </div>
+          <div class="feature-item">
+            <i class="fas fa-check-circle"></i>
+            <span>7/24 Teknik Destek</span>
+          </div>
+          <div class="feature-item">
+            <i class="fas fa-check-circle"></i>
+            <span>Kolay Kullanım</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Side - Login Form -->
+    <div class="login-form-container">
+      <div class="login-form-wrapper">
+        <div class="form-header">
+          <h3>Giriş Yap</h3>
+          <p>Hesabınıza erişim sağlayın</p>
+        </div>
+
+        <form class="login-form" (ngSubmit)="onSubmit()" #loginForm="ngForm">
+          <div class="form-group">
+            <label for="email">E-posta Adresi</label>
+            <div class="input-wrapper">
+              <input
+                type="email"
+                id="email"
+                name="email"
+                class="form-input"
+                placeholder="ornek@email.com"
+                [(ngModel)]="loginData.email"
+                required
+                email
+                #email="ngModel"
+              />
+              <i class="fas fa-envelope input-icon"></i>
+            </div>
+            <div class="validation-error" *ngIf="email.invalid && email.touched">
+              <i class="fas fa-exclamation-circle"></i>
+              <span *ngIf="email.errors?.['required']">E-posta adresi gereklidir</span>
+              <span *ngIf="email.errors?.['email']">Geçerli bir e-posta adresi giriniz</span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="password">Şifre</label>
+            <div class="input-wrapper">
+              <input
+                [type]="showPassword ? 'text' : 'password'"
+                id="password"
+                name="password"
+                class="form-input"
+                placeholder="••••••••"
+                [(ngModel)]="loginData.password"
+                required
+                minlength="6"
+                #password="ngModel"
+              />
+              <button
+                type="button"
+                class="password-toggle"
+                (click)="togglePassword()"
+              >
+                <i [class]="showPassword ? 'fas fa-eye-slash' : 'fas fa-eye'"></i>
+              </button>
+            </div>
+            <div class="validation-error" *ngIf="password.invalid && password.touched">
+              <i class="fas fa-exclamation-circle"></i>
+              <span *ngIf="password.errors?.['required']">Şifre gereklidir</span>
+              <span *ngIf="password.errors?.['minlength']">Şifre en az 6 karakter olmalıdır</span>
+            </div>
+          </div>
+
+          <div class="form-options">
+            <label class="checkbox-wrapper">
+              <input type="checkbox" [(ngModel)]="rememberMe" name="rememberMe">
+              <span class="checkmark"></span>
+              <span class="checkbox-label">Beni hatırla</span>
+            </label>
+            <a href="#" class="forgot-password">Şifremi unuttum</a>
+          </div>
+
+          <div class="form-actions">
+            <button
+              type="submit"
+              class="btn primary login-btn"
+              [disabled]="loginForm.invalid || isLoading"
+            >
+              <i *ngIf="isLoading" class="fas fa-spinner fa-spin"></i>
+              <i *ngIf="!isLoading" class="fas fa-sign-in-alt"></i>
+              {{ isLoading ? 'Giriş yapılıyor...' : 'Giriş Yap' }}
+            </button>
+          </div>
+
+          <div class="error-message" *ngIf="errorMessage">
+            <i class="fas fa-exclamation-triangle"></i>
+            {{ errorMessage }}
+          </div>
+        </form>
+
+        <div class="form-footer">
+          <p>Hesabınız yok mu? <a href="#" (click)="goToRegister()">Kayıt olun</a></p>
+        </div>
+
+        <div class="divider">
+          <span>veya</span>
+        </div>
+
+        <div class="social-login">
+          <button class="btn secondary social-btn">
+            <i class="fab fa-google"></i>
+            Google ile Giriş
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,331 @@
+.overview-container {
+  padding: 0;
+}
+
+.page-header {
+  margin-bottom: 2rem;
+
+  .page-title {
+    font-size: 1.875rem;
+    font-weight: 700;
+    color: var(--gray-900);
+    margin: 0 0 0.5rem 0;
+  }
+
+  .page-subtitle {
+    color: var(--gray-600);
+    font-size: 1rem;
+    margin: 0;
+  }
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.stat-card {
+  background: white;
+  border-radius: var(--radius-xl);
+  padding: 1.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  border: 1px solid var(--gray-200);
+  transition: all 0.2s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  }
+
+  &.stat-primary {
+    border-left: 4px solid var(--primary-500);
+    
+    .stat-icon {
+      background: var(--primary-100);
+      color: var(--primary-600);
+    }
+  }
+
+  &.stat-success {
+    border-left: 4px solid var(--success-500);
+    
+    .stat-icon {
+      background: var(--success-100);
+      color: var(--success-600);
+    }
+  }
+
+  &.stat-info {
+    border-left: 4px solid #3b82f6;
+    
+    .stat-icon {
+      background: #dbeafe;
+      color: #2563eb;
+    }
+  }
+
+  &.stat-warning {
+    border-left: 4px solid #f59e0b;
+    
+    .stat-icon {
+      background: #fef3c7;
+      color: #d97706;
+    }
+  }
+}
+
+.stat-content {
+  .stat-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+
+    .stat-title {
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--gray-600);
+      margin: 0;
+      line-height: 1.4;
+    }
+
+    .stat-icon {
+      width: 2.5rem;
+      height: 2.5rem;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.125rem;
+    }
+  }
+
+  .stat-body {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+
+    .stat-value {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--gray-900);
+      line-height: 1;
+    }
+
+    .stat-change {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+      font-size: 0.875rem;
+      font-weight: 600;
+
+      &.positive {
+        color: var(--success-600);
+      }
+
+      &.negative {
+        color: var(--danger-600);
+      }
+
+      i {
+        font-size: 0.75rem;
+      }
+    }
+  }
+}
+
+.content-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 2rem;
+}
+
+.content-card {
+  background: white;
+  border-radius: var(--radius-xl);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  border: 1px solid var(--gray-200);
+  overflow: hidden;
+
+  .card-header {
+    padding: 1.5rem 1.5rem 1rem 1.5rem;
+    border-bottom: 1px solid var(--gray-200);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .card-title {
+      font-size: 1.125rem;
+      font-weight: 600;
+      color: var(--gray-900);
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+
+      i {
+        color: var(--primary-500);
+      }
+    }
+
+    .card-action {
+      color: var(--primary-600);
+      text-decoration: none;
+      font-size: 0.875rem;
+      font-weight: 500;
+      transition: color 0.2s ease;
+
+      &:hover {
+        color: var(--primary-700);
+      }
+    }
+  }
+
+  .card-body {
+    padding: 1.5rem;
+  }
+}
+
+.appointment-list {
+  .appointment-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--gray-100);
+
+    &:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    &:first-child {
+      padding-top: 0;
+    }
+
+    .appointment-info {
+      .patient-name {
+        font-weight: 600;
+        color: var(--gray-900);
+        margin-bottom: 0.25rem;
+      }
+
+      .doctor-name {
+        font-size: 0.875rem;
+        color: var(--gray-600);
+      }
+    }
+
+    .appointment-meta {
+      text-align: right;
+
+      .appointment-time {
+        font-weight: 600;
+        color: var(--gray-900);
+        margin-bottom: 0.25rem;
+      }
+
+      .appointment-status {
+        font-size: 0.75rem;
+        font-weight: 600;
+        padding: 0.25rem 0.75rem;
+        border-radius: var(--radius-full);
+
+        &.status-confirmed {
+          background: var(--success-100);
+          color: var(--success-700);
+        }
+
+        &.status-pending {
+          background: var(--warning-100);
+          color: var(--warning-700);
+        }
+      }
+    }
+  }
+}
+
+.quick-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+
+  .action-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.875rem 1rem;
+    border: none;
+    border-radius: var(--radius-lg);
+    font-weight: 600;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: left;
+
+    &.primary {
+      background: var(--primary-600);
+      color: white;
+
+      &:hover {
+        background: var(--primary-700);
+        transform: translateY(-1px);
+      }
+    }
+
+    &.secondary {
+      background: var(--success-500);
+      color: white;
+
+      &:hover {
+        background: var(--success-600);
+        transform: translateY(-1px);
+      }
+    }
+
+    &.tertiary {
+      background: var(--warning-500);
+      color: white;
+
+      &:hover {
+        background: var(--warning-600);
+        transform: translateY(-1px);
+      }
+    }
+
+    &.quaternary {
+      background: var(--gray-600);
+      color: white;
+
+      &:hover {
+        background: var(--gray-700);
+        transform: translateY(-1px);
+      }
+    }
+
+    i {
+      font-size: 1rem;
+    }
+  }
+}
+
+// Responsive design
+@media (max-width: 1024px) {
+  .content-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .quick-actions {
+    .action-btn {
+      justify-content: center;
+    }
+  }
+}

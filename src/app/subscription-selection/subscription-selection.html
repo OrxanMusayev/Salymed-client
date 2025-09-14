@@ -1,0 +1,179 @@
+<div class="pricing-page">
+  <!-- Header Section -->
+  <header class="hero-section">
+    <div class="container">
+      <nav class="navbar">
+        <div class="nav-brand">
+          <h1 class="brand-title" (click)="navigateToHome()"><i class="fas fa-hospital-alt"></i> Salymed</h1>
+        </div>
+        <div class="nav-links">
+          <button type="button" class="back-btn" (click)="goBack()">
+            <i class="fas fa-arrow-left"></i> Geri
+          </button>
+        </div>
+      </nav>
+      
+      <div class="hero-content">
+        <div class="hero-text">
+          <h1 class="hero-title fade-in-up">
+            Abonelik <br>
+            <span class="highlight">Planı Seçimi</span>
+          </h1>
+          <p class="hero-description fade-in-up">
+            Kliniğinizin ihtiyaçlarına en uygun planı seçin ve hemen başlayın.
+            <strong>İlk 1 ay tamamen ücretsiz!</strong>
+          </p>
+          
+          <!-- Progress Bar -->
+          <div class="progress-bar fade-in-up">
+            <div class="progress-step completed">
+              <div class="step-number">1</div>
+              <span>Klinik</span>
+            </div>
+            <div class="progress-step completed">
+              <div class="step-number">2</div>
+              <span>Admin</span>
+            </div>
+            <div class="progress-step active">
+              <div class="step-number">3</div>
+              <span>Abonelik</span>
+            </div>
+            <div class="progress-step">
+              <div class="step-number">4</div>
+              <span>Ödeme</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Pricing Section -->
+  <section class="pricing-section">
+    <div class="container">
+      <div class="pricing-grid">
+        
+        <!-- Başlangıç Plan -->
+        <div class="pricing-card" [class.selected]="selectedPlan === 'basic'" (click)="selectPlan('basic')">
+          <div class="plan-header">
+            <h3 class="plan-name">Başlangıç</h3>
+            <div class="plan-price">
+              <span class="currency">$</span>
+              <span class="amount">45</span>
+              <span class="period">/ay</span>
+            </div>
+            <p class="plan-description">Küçük klinikler için ideal</p>
+          </div>
+          
+                    <div class="plan-features">
+            <div class="feature-item">
+              <i class="fas fa-check"></i>
+              <span>1-5 Uzman Hekim Kaydı</span>
+            </div>
+            <div class="feature-item">
+              <i class="fas fa-check"></i>
+              <span>Randevu Ajenda Kullanımı</span>
+            </div>
+            <div class="feature-item">
+              <i class="fas fa-check"></i>
+              <span>AI Otomatik Randevu Hatırlatma</span>
+            </div>
+            <div class="feature-item">
+              <i class="fas fa-check"></i>
+              <span>WhatsApp AI Dijital Asistanı</span>
+            </div>
+            <div class="feature-item">
+              <i class="fas fa-check"></i>
+              <span>Google Takvim Bağlantısı</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Standart Plan -->
+        <div class="pricing-card" [class.selected]="selectedPlan === 'standard'" (click)="selectPlan('standard')">
+          <div class="plan-header">
+            <h3 class="plan-name">Standart</h3>
+            <div class="plan-price">
+              <span class="currency">$</span>
+              <span class="amount">85</span>
+              <span class="period">/ay</span>
+            </div>
+            <p class="plan-description">Orta ölçekli klinikler için</p>
+          </div>
+          
+          <div class="plan-features">
+            <div class="feature-item">
+              <i class="fas fa-check"></i>
+              <span>6-15 Uzman Hekim Kaydı</span>
+            </div>
+            <div class="feature-item">
+              <i class="fas fa-check"></i>
+              <span>Tüm Başlangıç Özellikleri</span>
+            </div>
+            <div class="feature-item">
+              <i class="fas fa-check"></i>
+              <span>Hasta Takip Sistemi</span>
+            </div>
+            <div class="feature-item">
+              <i class="fas fa-check"></i>
+              <span>Çok Dilli Destek</span>
+            </div>
+            <div class="feature-item">
+              <i class="fas fa-check"></i>
+              <span>Gelişmiş Raporlama</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Premium Plan -->
+        <div class="pricing-card" [class.selected]="selectedPlan === 'premium'" (click)="selectPlan('premium')">
+          <div class="plan-header">
+            <h3 class="plan-name">Premium</h3>
+            <div class="plan-price">
+              <span class="currency">$</span>
+              <span class="amount">135</span>
+              <span class="period">/ay</span>
+            </div>
+            <p class="plan-description">Büyük klinikler için</p>
+          </div>
+          
+          <div class="plan-features">
+            <div class="feature-item">
+              <i class="fas fa-check"></i>
+              <span>Sınırsız Hekim Kaydı</span>
+            </div>
+            <div class="feature-item">
+              <i class="fas fa-check"></i>
+              <span>Tüm Standart Özellikleri</span>
+            </div>
+            <div class="feature-item">
+              <i class="fas fa-check"></i>
+              <span>Özel API Entegrasyonu</span>
+            </div>
+            <div class="feature-item">
+              <i class="fas fa-check"></i>
+              <span>24/7 Öncelikli Destek</span>
+            </div>
+            <div class="feature-item">
+              <i class="fas fa-check"></i>
+              <span>Özel Rapor Özelleştirme</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Subscribe Button -->
+      <div class="subscribe-section">
+        <button 
+          type="button" 
+          class="btn-subscribe" 
+          [disabled]="!selectedPlan"
+          (click)="proceedToPayment()"
+        >
+          Abone Ol
+          <i class="fas fa-arrow-right"></i>
+        </button>
+      </div>
+    </div>
+  </section>
+</div>

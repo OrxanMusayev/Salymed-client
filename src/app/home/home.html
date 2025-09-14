@@ -1,0 +1,201 @@
+<div class="homepage">
+  <!-- Header Section -->
+  <header class="hero-section">
+    <div class="container">
+      <nav class="navbar">
+        <div class="nav-brand">
+          <h1 class="brand-title"><i class="fas fa-hospital-alt"></i> Salymed</h1>
+        </div>
+        <div class="nav-links">
+          <a class="nav-link active">Əsas Səhifə</a>
+          <a (click)="goToPricing()" class="nav-link">Qiymətlər</a>
+          <a (click)="goToContact()" class="nav-link">Əlaqə</a>
+          <a (click)="goToLogin()" class="nav-link login-link">Giriş Yap</a>
+          <a (click)="goToRegister()" class="nav-link register-link">Kaydol</a>
+        </div>
+      </nav>
+      
+      <div class="hero-content">
+        <div class="hero-text">
+          <h1 class="hero-title fade-in-up">
+            Sağlık Yönetimi <br>
+            <span class="highlight">Yeniden Tanımlanıyor</span>
+          </h1>
+          <p class="hero-description fade-in-up">
+            Modern ve güvenli sağlık yönetim sistemi ile kliniklerinizi 
+            daha verimli bir şekilde yönetin. Hasta takibinden randevu 
+            yönetimine kadar tüm süreçlerinizi dijitalleştirin.
+          </p>
+          <div class="hero-actions fade-in-up">
+            <button class="btn primary" (click)="goToLogin()">
+              <i class="fas fa-rocket"></i>
+              Hemen Başla
+            </button>
+            <button class="btn secondary" (click)="scrollToFeatures()">
+              <i class="fas fa-info-circle"></i>
+              Daha Fazla Bilgi
+            </button>
+          </div>
+        </div>
+        <div class="hero-visual">
+          <div class="visual-card">
+            <div class="dashboard-preview">
+              <div class="preview-header">
+                <div class="preview-dots">
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                </div>
+                <span class="preview-title">Salymed Dashboard</span>
+              </div>
+              <div class="preview-content">
+                <div class="preview-stat-cards">
+                  <div class="stat-card">
+                    <div class="stat-icon">
+                      <i class="fas fa-users"></i>
+                    </div>
+                    <div class="stat-info">
+                      <h4>1,247</h4>
+                      <p>Aktif Hasta</p>
+                    </div>
+                  </div>
+                  <div class="stat-card">
+                    <div class="stat-icon">
+                      <i class="fas fa-calendar"></i>
+                    </div>
+                    <div class="stat-info">
+                      <h4>89</h4>
+                      <p>Bugünkü Randevu</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="preview-chart">
+                  <div class="chart-bars">
+                    <div class="bar" style="height: 60%"></div>
+                    <div class="bar" style="height: 80%"></div>
+                    <div class="bar" style="height: 45%"></div>
+                    <div class="bar" style="height: 90%"></div>
+                    <div class="bar" style="height: 70%"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Features Section -->
+  <section id="features" class="features-section">
+    <div class="container">
+      <div class="section-header text-center">
+        <h2>Özellikler</h2>
+        <p>Sağlık yönetimi için ihtiyacınız olan her şey</p>
+      </div>
+      
+      <div class="features-grid">
+        <div class="feature-card card fade-in-up">
+          <div class="feature-icon">
+            <i class="fas fa-user-md"></i>
+          </div>
+          <h3>Doktor Yönetimi</h3>
+          <p>Doktorlarınızı, uzmanlık alanlarını ve çalışma saatlerini kolayca yönetin.</p>
+        </div>
+        
+        <div class="feature-card card fade-in-up">
+          <div class="feature-icon">
+            <i class="fas fa-calendar-check"></i>
+          </div>
+          <h3>Randevu Sistemi</h3>
+          <p>Otomatik randevu planlama ve hasta bildirimleri ile verimli randevu yönetimi.</p>
+        </div>
+        
+        <div class="feature-card card fade-in-up">
+          <div class="feature-icon">
+            <i class="fas fa-chart-line"></i>
+          </div>
+          <h3>Analitik Raporlar</h3>
+          <p>Detaylı raporlar ve analizler ile işletmenizin performansını takip edin.</p>
+        </div>
+        
+        <div class="feature-card card fade-in-up">
+          <div class="feature-icon">
+            <i class="fas fa-shield-alt"></i>
+          </div>
+          <h3>Güvenli Sistem</h3>
+          <p>End-to-end şifreleme ve güvenlik protokolleri ile hasta verilerinizi koruyun.</p>
+        </div>
+        
+        <div class="feature-card card fade-in-up">
+          <div class="feature-icon">
+            <i class="fas fa-mobile-alt"></i>
+          </div>
+          <h3>Mobil Uyumlu</h3>
+          <p>Her yerden erişim sağlayın. Mobil cihazlar için optimize edilmiş arayüz.</p>
+        </div>
+        
+        <div class="feature-card card fade-in-up">
+          <div class="feature-icon">
+            <i class="fas fa-headset"></i>
+          </div>
+          <h3>7/24 Destek</h3>
+          <p>Uzman ekibimiz her zaman yanınızda. Kesintisiz teknik destek hizmeti.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="cta-section">
+    <div class="container">
+      <div class="cta-content text-center">
+        <h2>Hemen Başlayın</h2>
+        <p>Sağlık yönetiminde yeni dönem başlıyor. Şimdi katılın ve farkı yaşayın.</p>
+        <button class="btn primary" (click)="goToLogin()">
+          <i class="fas fa-arrow-right"></i>
+          Ücretsiz Deneyin
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-brand">
+          <h3>Salymed</h3>
+          <p>Sağlık yönetiminde güvenilir çözümünüz</p>
+        </div>
+        <div class="footer-links">
+          <h4>Ürün</h4>
+          <ul>
+            <li><a href="#">Özellikler</a></li>
+            <li><a href="#">Fiyatlandırma</a></li>
+            <li><a href="#">Güvenlik</a></li>
+          </ul>
+        </div>
+        <div class="footer-links">
+          <h4>Destek</h4>
+          <ul>
+            <li><a href="#">Yardım Merkezi</a></li>
+            <li><a href="#">İletişim</a></li>
+            <li><a href="#">API Dokümantasyonu</a></li>
+          </ul>
+        </div>
+        <div class="footer-links">
+          <h4>Şirket</h4>
+          <ul>
+            <li><a href="#">Hakkımızda</a></li>
+            <li><a href="#">Blog</a></li>
+            <li><a href="#">Kariyer</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2024 Salymed. Tüm hakları saklıdır.</p>
+      </div>
+    </div>
+  </footer>
+</div>

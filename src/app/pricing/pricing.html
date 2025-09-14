@@ -1,0 +1,275 @@
+<div class="pricing-page">
+  <!-- Header Section -->
+  <header class="hero-section">
+    <div class="container">
+      <nav class="navbar">
+        <div class="nav-brand">
+          <h1 class="brand-title" (click)="goToHome()"><i class="fas fa-hospital-alt"></i> Salymed</h1>
+        </div>
+        <div class="nav-links">
+          <a (click)="goToHome()" class="nav-link">Əsas Səhifə</a>
+          <a (click)="goToLogin()" class="nav-link active">Qiymətlər</a>
+          <a (click)="goToContact()" class="nav-link">Əlaqə</a>
+          <a (click)="goToLogin()" class="nav-link login-link">Giriş Yap</a>
+          <a class="nav-link register-link">Kaydol</a>
+        </div>
+      </nav>
+      
+      <div class="hero-content">
+        <div class="hero-text">
+          <h1 class="hero-title fade-in-up">
+            Sağlık Yönetimi <br>
+            <span class="highlight">Abonelik Planları</span>
+          </h1>
+          <p class="hero-description fade-in-up">
+            İhtiyacınıza en uygun planı seçin ve kliniğinizi dijital dönüşümle güçlendirin.
+            <strong>İlk 1 ay tamamen ücretsiz!</strong>
+          </p>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Pricing Section -->
+  <section class="pricing-section">
+    <div class="container">
+      <div class="pricing-grid">
+        
+        <!-- Başlangıç Plan -->
+        <div class="pricing-card">
+          <div class="plan-header">
+            <h3 class="plan-name">Başlangıç</h3>
+            <div class="plan-price">
+              <span class="currency">$</span>
+              <span class="amount">45</span>
+              <span class="period">/ay</span>
+            </div>
+            <p class="plan-description">Küçük klinikler için ideal</p>
+          </div>
+          
+          <div class="plan-features">
+            <div class="feature-item">
+              <i class="fas fa-check"></i>
+              <span>1-5 Uzman Hekim Kaydı</span>
+            </div>
+            <div class="feature-item">
+              <i class="fas fa-check"></i>
+              <span>Randevu Ajanda Kullanımı</span>
+            </div>
+            <div class="feature-item">
+              <i class="fas fa-check"></i>
+              <span>Yapay Zeka Otomatik Randevu Hatırlatma</span>
+            </div>
+            <div class="feature-item">
+              <i class="fas fa-check"></i>
+              <span>WhatsApp Yapay Zeka Akıllı Dijital Asistanı</span>
+            </div>
+            <div class="feature-item">
+              <i class="fas fa-check"></i>
+              <span>Google Takvim Bağlantısı</span>
+            </div>
+            <div class="feature-item">
+              <i class="fas fa-check"></i>
+              <span>Detaylı Randevu Analiz Modülü</span>
+            </div>
+            <div class="feature-item">
+              <i class="fas fa-check"></i>
+              <span>Günlük, Haftalık ve Aylık Aktivite Raporu</span>
+            </div>
+            <div class="feature-item">
+              <i class="fas fa-check"></i>
+              <span>AI Otomatik Doğum Günü & Özel Gün Mesajları</span>
+            </div>
+            <div class="feature-item">
+              <i class="fas fa-check"></i>
+              <span>Sınırsız Akıllı Kampanya Özelliği</span>
+            </div>
+            <div class="feature-item">
+              <i class="fas fa-check"></i>
+              <span>AI Telefon Araması ile Randevu Onaylama</span>
+            </div>
+            <div class="feature-item">
+              <i class="fas fa-check"></i>
+              <span>AI Otomatik Numara Arama ve Raporlama</span>
+            </div>
+          </div>
+          
+          <div class="plan-cta">
+            <button class="btn primary" (click)="goToLogin()">
+              İlk 1 Ay Ücretsiz Başla
+            </button>
+          </div>
+        </div>
+
+        <!-- Profesional Plan -->
+        <div class="pricing-card featured">
+          <div class="popular-badge">En Popüler</div>
+          <div class="plan-header">
+            <h3 class="plan-name">Profesional</h3>
+            <div class="plan-price">
+              <span class="currency">$</span>
+              <span class="amount">95</span>
+              <span class="period">/ay</span>
+            </div>
+            <p class="plan-description">Orta büyüklükteki klinikler için</p>
+          </div>
+          
+          <div class="plan-features">
+            <div class="feature-item">
+              <i class="fas fa-check"></i>
+              <span>6-15 Uzman Hekim Kaydı</span>
+            </div>
+            <div class="feature-item">
+              <i class="fas fa-check"></i>
+              <span>Randevu Ajanda Kullanımı</span>
+            </div>
+            <div class="feature-item">
+              <i class="fas fa-check"></i>
+              <span>Yapay Zeka Otomatik Randevu Hatırlatma</span>
+            </div>
+            <div class="feature-item">
+              <i class="fas fa-check"></i>
+              <span>WhatsApp Yapay Zeka Akıllı Dijital Asistanı</span>
+            </div>
+            <div class="feature-item">
+              <i class="fas fa-check"></i>
+              <span>Google Takvim Bağlantısı</span>
+            </div>
+            <div class="feature-item">
+              <i class="fas fa-check"></i>
+              <span>Detaylı Randevu Analiz Modülü</span>
+            </div>
+            <div class="feature-item">
+              <i class="fas fa-check"></i>
+              <span>Günlük, Haftalık ve Aylık Aktivite Raporu</span>
+            </div>
+            <div class="feature-item">
+              <i class="fas fa-check"></i>
+              <span>AI Otomatik Doğum Günü & Özel Gün Mesajları</span>
+            </div>
+            <div class="feature-item">
+              <i class="fas fa-check"></i>
+              <span>Sınırsız Akıllı Kampanya Özelliği</span>
+            </div>
+            <div class="feature-item">
+              <i class="fas fa-check"></i>
+              <span>AI Telefon Araması ile Randevu Onaylama</span>
+            </div>
+            <div class="feature-item">
+              <i class="fas fa-check"></i>
+              <span>AI Otomatik Numara Arama ve Raporlama</span>
+            </div>
+          </div>
+          
+          <div class="plan-cta">
+            <button class="btn primary featured" (click)="goToLogin()">
+              İlk 1 Ay Ücretsiz Başla
+            </button>
+          </div>
+        </div>
+
+        <!-- Enterprise Plan -->
+        <div class="pricing-card">
+          <div class="plan-header">
+            <h3 class="plan-name">Enterprise</h3>
+            <div class="plan-price">
+              <span class="contact-price">Əlaqə Saxlayın</span>
+            </div>
+            <p class="plan-description">Büyük hastane ve klinik zincirleri için</p>
+          </div>
+          
+          <div class="plan-features">
+            <div class="feature-item">
+              <i class="fas fa-check"></i>
+              <span>16+ Uzman Hekim Kaydı</span>
+            </div>
+            <div class="feature-item">
+              <i class="fas fa-check"></i>
+              <span>Randevu Ajanda Kullanımı</span>
+            </div>
+            <div class="feature-item">
+              <i class="fas fa-check"></i>
+              <span>Yapay Zeka Otomatik Randevu Hatırlatma</span>
+            </div>
+            <div class="feature-item">
+              <i class="fas fa-check"></i>
+              <span>WhatsApp Yapay Zeka Akıllı Dijital Asistanı</span>
+            </div>
+            <div class="feature-item">
+              <i class="fas fa-check"></i>
+              <span>Google Takvim Bağlantısı</span>
+            </div>
+            <div class="feature-item">
+              <i class="fas fa-check"></i>
+              <span>Detaylı Randevu Analiz Modülü</span>
+            </div>
+            <div class="feature-item">
+              <i class="fas fa-check"></i>
+              <span>Günlük, Haftalık ve Aylık Aktivite Raporu</span>
+            </div>
+            <div class="feature-item">
+              <i class="fas fa-check"></i>
+              <span>AI Otomatik Doğum Günü & Özel Gün Mesajları</span>
+            </div>
+            <div class="feature-item">
+              <i class="fas fa-check"></i>
+              <span>Sınırsız Akıllı Kampanya Özelliği</span>
+            </div>
+            <div class="feature-item">
+              <i class="fas fa-check"></i>
+              <span>AI Telefon Araması ile Randevu Onaylama</span>
+            </div>
+            <div class="feature-item">
+              <i class="fas fa-check"></i>
+              <span>AI Otomatik Numara Arama ve Raporlama</span>
+            </div>
+            <div class="feature-item premium">
+              <i class="fas fa-star"></i>
+              <span>Özel Entegrasyon Desteği</span>
+            </div>
+            <div class="feature-item premium">
+              <i class="fas fa-star"></i>
+              <span>7/24 Özel Müşteri Desteği</span>
+            </div>
+          </div>
+          
+          <div class="plan-cta">
+            <button class="btn secondary" (click)="goToContact()">
+              Əlaqə Saxlayın
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ Section -->
+  <section class="faq-section">
+    <div class="container">
+      <h2 class="section-title">Sıkça Sorulan Sorular</h2>
+      
+      <div class="faq-grid">
+        <div class="faq-item">
+          <h3>İlk ay ücretsiz nasıl çalışıyor?</h3>
+          <p>Herhangi bir plana kaydolduğunuzda, ilk 30 gün tamamen ücretsiz olarak tüm özellikleri kullanabilirsiniz. İstediğiniz zaman iptal edebilirsiniz.</p>
+        </div>
+        
+        <div class="faq-item">
+          <h3>Plan değişikliği yapabilir miyim?</h3>
+          <p>Evet, istediğiniz zaman planınızı yükseltebilir veya düşürebilirsiniz. Değişiklik bir sonraki fatura döneminde geçerli olur.</p>
+        </div>
+        
+        <div class="faq-item">
+          <h3>Veri güvenliği nasıl sağlanıyor?</h3>
+          <p>Tüm verileriniz 256-bit SSL şifreleme ile korunur ve KVKK uyumlu sunucularda saklanır.</p>
+        </div>
+        
+        <div class="faq-item">
+          <h3>Müşteri desteği var mı?</h3>
+          <p>Evet, tüm planlarda email desteği, Enterprise planda ise 7/24 telefon desteği sunuyoruz.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>

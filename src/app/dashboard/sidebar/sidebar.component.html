@@ -1,0 +1,56 @@
+<aside class="sidebar" [class.collapsed]="collapsed">
+  <div class="sidebar-header">
+    <div class="logo" *ngIf="!collapsed">
+      <div class="logo-icon">
+        <i class="fas fa-stethoscope"></i>
+      </div>
+      <span class="logo-text">SalyMed</span>
+    </div>
+    <button 
+      class="toggle-btn" 
+      (click)="toggleSidebarState()"
+      [attr.aria-label]="collapsed ? 'Sidebar-ı aç' : 'Sidebar-ı bağla'">
+      <i class="fas fa-chevron-left" [class.rotated]="collapsed"></i>
+    </button>
+  </div>
+
+  <nav class="sidebar-nav">
+    <ul class="nav-list">
+      <li 
+        class="nav-item" 
+        *ngFor="let item of menuItems"
+        [class.active]="item.isActive">
+        <a 
+          class="nav-link"
+          [routerLink]="item.route"
+          (click)="selectMenuItem(item)"
+          [attr.title]="collapsed ? item.label : null">
+          <div class="nav-icon">
+            <i [class]="item.icon"></i>
+          </div>
+          <span class="nav-label" *ngIf="!collapsed">{{ item.label }}</span>
+          <div class="nav-indicator" *ngIf="item.isActive"></div>
+        </a>
+      </li>
+    </ul>
+  </nav>
+
+  <div class="sidebar-footer">
+    <div class="user-info" [class.collapsed]="collapsed">
+      <div class="user-avatar">
+        AS
+      </div>
+      <div class="user-details" *ngIf="!collapsed">
+        <span class="user-name">Admin Salymed</span>
+        <span class="user-role">Klinik Administratoru</span>
+      </div>
+    </div>
+    
+    <button 
+      class="logout-btn"
+      [attr.title]="collapsed ? 'Çıxış' : null">
+      <i class="fas fa-sign-out-alt"></i>
+      <span *ngIf="!collapsed">Çıxış</span>
+    </button>
+  </div>
+</aside>

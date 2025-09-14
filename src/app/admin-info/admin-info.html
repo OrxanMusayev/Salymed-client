@@ -1,0 +1,171 @@
+<div class="registration-page">
+  <div class="registration-container">
+    <!-- Left Side - Branding -->
+    <div class="registration-brand">
+      <div class="brand-content">
+        <div class="brand-logo">
+          <h1><i class="fas fa-hospital-alt"></i> Salymed</h1>
+        </div>
+        
+        <h2 class="brand-title">
+          Yönetici Bilgileri
+        </h2>
+        
+        <p class="brand-description">
+          Klinik yöneticinizin bilgilerini girin. Bu bilgiler sistem girişi ve iletişim için kullanılacak.
+        </p>
+        
+        <div class="brand-features">
+          <div class="feature-item">
+            <div class="feature-icon">2</div>
+            <span>Kişisel Bilgiler</span>
+          </div>
+          <div class="feature-item">
+            <div class="feature-icon">✓</div>
+            <span>Güvenli İletişim</span>
+          </div>
+          <div class="feature-item">
+            <div class="feature-icon">✓</div>
+            <span>Sistem Erişimi</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Side - Registration Form -->
+    <div class="registration-form-section">
+      <div class="form-header">
+        <button type="button" class="back-button" (click)="goBack()">
+          <i class="fas fa-times"></i>
+        </button>
+        
+        <h2 class="form-title">Yönetici Bilgileri</h2>
+        <p class="form-subtitle">
+          Klinik yöneticisinin kişisel bilgilerini ve iletişim detaylarını girin
+        </p>
+      </div>
+
+      <form class="registration-form" #adminForm="ngForm" (ngSubmit)="proceedToSubscription()">
+        <!-- Ad -->
+        <div class="form-group">
+          <label for="firstName">Ad *</label>
+          <div class="input-group">
+            <input
+              type="text"
+              id="firstName"
+              name="firstName"
+              [(ngModel)]="firstName"
+              placeholder="Adınızı daxil edin"
+              required
+              #firstNameInput="ngModel"
+              [class.error]="firstNameInput.invalid && firstNameInput.touched">
+            
+            <div class="error-message" *ngIf="firstNameInput.invalid && firstNameInput.touched">
+              <span>Ad məcburidir</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Soyad -->
+        <div class="form-group">
+          <label for="lastName">Soyad *</label>
+          <div class="input-group">
+            <input
+              type="text"
+              id="lastName"
+              name="lastName"
+              [(ngModel)]="lastName"
+              placeholder="Soyadınızı daxil edin"
+              required
+              #lastNameInput="ngModel"
+              [class.error]="lastNameInput.invalid && lastNameInput.touched">
+            
+            <div class="error-message" *ngIf="lastNameInput.invalid && lastNameInput.touched">
+              <span>Soyad məcburidir</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Telefon -->
+        <div class="form-group">
+          <label for="phoneNumber">Telefon Nömrəsi *</label>
+          <div class="input-group">
+            <div class="phone-input-wrapper">
+              <div class="country-select">
+                <button 
+                  type="button" 
+                  class="country-button"
+                  [class.open]="isCountryDropdownOpen"
+                  (click)="toggleCountryDropdown()">
+                  <div class="country-info">
+                    <span class="dial-code">{{ selectedCountry.dialCode }}</span>
+                  </div>
+                  <span class="dropdown-arrow" [class.open]="isCountryDropdownOpen">▼</span>
+                </button>
+                
+                <div class="country-dropdown" *ngIf="isCountryDropdownOpen">
+                  <div 
+                    *ngFor="let country of countries" 
+                    class="country-option"
+                    (click)="selectCountry(country)">
+                    <span class="country-name">{{ country.name }}</span>
+                    <span class="dial-code">{{ country.dialCode }}</span>
+                  </div>
+                </div>
+              </div>
+              
+              <input
+                type="tel"
+                id="phoneNumber"
+                name="phoneNumber"
+                class="phone-input"
+                [(ngModel)]="phoneNumber"
+                placeholder="Telefon nömrənizi daxil edin"
+                required
+                #phoneInput="ngModel"
+                (keypress)="onPhoneKeyPress($event)"
+                [class.error]="phoneInput.invalid && phoneInput.touched">
+            </div>
+            
+            <div class="error-message" *ngIf="phoneInput.invalid && phoneInput.touched">
+              <span>Telefon nömrəsi məcburidir</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Email -->
+        <div class="form-group">
+          <label for="email">E-poçt *</label>
+          <div class="input-group">
+            <input
+              type="email"
+              id="email"
+              name="email"
+              [(ngModel)]="email"
+              placeholder="E-poçt ünvanınızı daxil edin"
+              required
+              email
+              #emailInput="ngModel"
+              [class.error]="emailInput.invalid && emailInput.touched">
+            
+            <div class="error-message" *ngIf="emailInput.invalid && emailInput.touched">
+              <span *ngIf="emailInput.errors?.['required']">E-poçt məcburidir</span>
+              <span *ngIf="emailInput.errors?.['email']">E-poçt formatı düzgün deyil</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="form-actions">
+          <button 
+            type="submit" 
+            class="submit-button"
+            [disabled]="!isFormValid()">
+            Növbəti Addım
+            <i class="fas fa-arrow-right"></i>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

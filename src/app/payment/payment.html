@@ -1,0 +1,333 @@
+<div class="payment-page">
+  <!-- Hero Section -->
+  <section class="hero-section">
+    <div class="container">
+      <nav class="navbar">
+        <h1 class="brand-title" (click)="navigateToHome()">Salymed</h1>
+      </nav>
+      
+      <div class="hero-content">
+        <h1 class="hero-title">
+          <span class="highlight">Ödeme</span> Bilgileri
+        </h1>
+        <p class="hero-description">
+          Son adım! Ödeme bilgilerinizi girin ve hemen başlayın
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Payment Section -->
+  <section class="payment-section">
+    <div class="container">
+      <div class="payment-wrapper">
+        <!-- Progress Bar -->
+        <div class="form-header">
+          <div class="progress-bar">
+            <div class="progress-step completed">
+              <div class="step-number">1</div>
+              <span>Klinik Bilgileri</span>
+            </div>
+            <div class="progress-step completed">
+              <div class="step-number">2</div>
+              <span>Admin Bilgileri</span>
+            </div>
+            <div class="progress-step completed">
+              <div class="step-number">3</div>
+              <span>Abonelik Seçimi</span>
+            </div>
+            <div class="progress-step active">
+              <div class="step-number">4</div>
+              <span>Ödeme</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="payment-content">
+          <!-- Left Side - Invoice -->
+          <div class="invoice-side">
+            <div class="invoice-card">
+              <h3 class="section-title">
+                <i class="fas fa-file-invoice"></i>
+                Fatura Bilgileri
+              </h3>
+              
+              <!-- Order Summary -->
+              <div class="order-summary" *ngIf="subscriptionData">
+                <h4>Sipariş Özeti</h4>
+                <div class="summary-item">
+                  <span class="item-name">{{ subscriptionData.name }}</span>
+                  <span class="item-price">{{ subscriptionData.currency }}{{ subscriptionData.price }}</span>
+                </div>
+                <div class="summary-item tax">
+                  <span class="item-name">KDV (%18)</span>
+                  <span class="item-price">{{ subscriptionData.currency }}{{ calculateTax() }}</span>
+                </div>
+                <div class="summary-item total">
+                  <span class="item-name">Toplam</span>
+                  <span class="item-price">{{ subscriptionData.currency }}{{ calculateTotal() }}</span>
+                </div>
+              </div>
+
+              <!-- Registration Summary -->
+              <div class="registration-summary" *ngIf="clinicData && adminData">
+                <h4>Kayıt Özeti</h4>
+                <div class="summary-info">
+                  <div class="info-item">
+                    <i class="fas fa-hospital"></i>
+                    <span>{{ clinicData.clinicName }}</span>
+                  </div>
+                  <div class="info-item">
+                    <i class="fas fa-user-md"></i>
+                    <span>{{ adminData.firstName }} {{ adminData.lastName }}</span>
+                  </div>
+                  <div class="info-item">
+                    <i class="fas fa-envelope"></i>
+                    <span>{{ adminData.email }}</span>
+                  </div>
+                  <div class="info-item">
+                    <i class="fas fa-crown"></i>
+                    <span>{{ subscriptionData?.name }}</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Invoice Form -->
+              <div class="invoice-form">
+                <h4>Fatura Adresi</h4>
+                <div class="form-group">
+                  <label for="companyName">Firma Adı</label>
+                  <input 
+                    type="text" 
+                    id="companyName"
+                    class="form-input"
+                    [(ngModel)]="invoiceForm.companyName"
+                    placeholder="Firma adınızı girin"
+                  >
+                </div>
+                
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="taxNumber">Vergi Numarası</label>
+                    <input 
+                      type="text" 
+                      id="taxNumber"
+                      class="form-input"
+                      [(ngModel)]="invoiceForm.taxNumber"
+                      placeholder="Vergi numarası"
+                    >
+                  </div>
+                  
+                  <div class="form-group">
+                    <label for="city">Şehir</label>
+                    <input 
+                      type="text" 
+                      id="city"
+                      class="form-input"
+                      [(ngModel)]="invoiceForm.city"
+                      placeholder="Şehir"
+                    >
+                  </div>
+                </div>
+                
+                <div class="form-group">
+                  <label for="address">Adres</label>
+                  <textarea 
+                    id="address"
+                    class="form-input"
+                    [(ngModel)]="invoiceForm.address"
+                    placeholder="Tam adresinizi girin"
+                    rows="3"
+                  ></textarea>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Side - Payment -->
+          <div class="payment-side">
+            <div class="payment-card">
+              <h3 class="section-title">
+                <i class="fas fa-credit-card"></i>
+                Ödeme Yöntemi
+              </h3>
+
+              <!-- Payment Methods -->
+              <div class="payment-methods">
+                <div 
+                  *ngFor="let method of paymentMethods"
+                  class="payment-method"
+                  [class.active]="selectedPaymentMethod === method.id"
+                  (click)="selectPaymentMethod(method.id)"
+                >
+                  <i [class]="method.icon"></i>
+                  <span>{{ method.name }}</span>
+                  <div class="radio-btn">
+                    <div class="radio-dot" *ngIf="selectedPaymentMethod === method.id"></div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Credit Card Form -->
+              <div class="card-form" *ngIf="selectedPaymentMethod === 'credit-card'">
+                <div class="form-group">
+                  <label for="cardHolderName">Kart Sahibinin Adı</label>
+                  <input 
+                    type="text" 
+                    id="cardHolderName"
+                    class="form-input"
+                    [(ngModel)]="cardForm.cardHolderName"
+                    placeholder="Ad Soyad"
+                  >
+                </div>
+
+                <div class="form-group card-number-group">
+                  <label for="cardNumber">Kart Numarası</label>
+                  <div class="card-input-wrapper">
+                    <input 
+                      type="text" 
+                      id="cardNumber"
+                      class="form-input"
+                      placeholder="1234 5678 9012 3456"
+                      maxlength="19"
+                      (input)="onCardNumberInput($event)"
+                    >
+                    <i [class]="getCardTypeIcon(cardForm.cardNumber)" class="card-type-icon"></i>
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="expiry">Son Kullanma Tarihi</label>
+                    <div class="expiry-inputs">
+                      <select 
+                        id="expiryMonth"
+                        class="form-input"
+                        [(ngModel)]="cardForm.expiryMonth"
+                      >
+                        <option value="">Ay</option>
+                        <option value="01">01</option>
+                        <option value="02">02</option>
+                        <option value="03">03</option>
+                        <option value="04">04</option>
+                        <option value="05">05</option>
+                        <option value="06">06</option>
+                        <option value="07">07</option>
+                        <option value="08">08</option>
+                        <option value="09">09</option>
+                        <option value="10">10</option>
+                        <option value="11">11</option>
+                        <option value="12">12</option>
+                      </select>
+                      <select 
+                        id="expiryYear"
+                        class="form-input"
+                        [(ngModel)]="cardForm.expiryYear"
+                      >
+                        <option value="">Yıl</option>
+                        <option value="24">2024</option>
+                        <option value="25">2025</option>
+                        <option value="26">2026</option>
+                        <option value="27">2027</option>
+                        <option value="28">2028</option>
+                        <option value="29">2029</option>
+                        <option value="30">2030</option>
+                      </select>
+                    </div>
+                  </div>
+                  
+                  <div class="form-group">
+                    <label for="cvv">CVV</label>
+                    <input 
+                      type="text" 
+                      id="cvv"
+                      class="form-input"
+                      [(ngModel)]="cardForm.cvv"
+                      placeholder="123"
+                      maxlength="4"
+                    >
+                  </div>
+                </div>
+              </div>
+
+              <!-- Bank Transfer Info -->
+              <div class="bank-transfer-info" *ngIf="selectedPaymentMethod === 'bank-transfer'">
+                <div class="info-box">
+                  <h4>Banka Hesap Bilgileri</h4>
+                  <div class="bank-details">
+                    <div class="detail-item">
+                      <span class="label">Banka Adı:</span>
+                      <span class="value">Türkiye İş Bankası</span>
+                    </div>
+                    <div class="detail-item">
+                      <span class="label">Hesap Adı:</span>
+                      <span class="value">Salymed Teknoloji A.Ş.</span>
+                    </div>
+                    <div class="detail-item">
+                      <span class="label">IBAN:</span>
+                      <span class="value">TR33 0006 4000 0011 2345 6789 01</span>
+                    </div>
+                    <div class="detail-item">
+                      <span class="label">Açıklama:</span>
+                      <span class="value">{{ clinicData?.clinicName }} - Abonelik</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Digital Wallet Info -->
+              <div class="digital-wallet-info" *ngIf="selectedPaymentMethod === 'digital-wallet'">
+                <div class="wallet-options">
+                  <div class="wallet-option">
+                    <i class="fab fa-paypal"></i>
+                    <span>PayPal</span>
+                  </div>
+                  <div class="wallet-option">
+                    <i class="fas fa-mobile-alt"></i>
+                    <span>Mobil Ödeme</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Security Info -->
+              <div class="security-info">
+                <div class="security-item">
+                  <i class="fas fa-shield-alt"></i>
+                  <span>256-bit SSL şifreleme ile güvenli ödeme</span>
+                </div>
+                <div class="security-item">
+                  <i class="fas fa-lock"></i>
+                  <span>Kart bilgileriniz saklanmaz</span>
+                </div>
+              </div>
+
+              <!-- Action Buttons -->
+              <div class="form-actions">
+                <button type="button" class="back-btn" (click)="goBack()" [disabled]="isProcessing">
+                  <i class="fas fa-arrow-left"></i>
+                  <span>Geri</span>
+                </button>
+                
+                <button 
+                  type="button" 
+                  class="pay-btn" 
+                  (click)="processPayment()"
+                  [disabled]="isProcessing"
+                >
+                  <div class="btn-content" *ngIf="!isProcessing">
+                    <span>Ödemeyi Tamamla</span>
+                    <i class="fas fa-arrow-right"></i>
+                  </div>
+                  <div class="btn-content processing" *ngIf="isProcessing">
+                    <i class="fas fa-spinner fa-spin"></i>
+                    <span>İşleniyor...</span>
+                  </div>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>

@@ -1,0 +1,110 @@
+.dashboard-layout {
+  display: flex;
+  min-height: 100vh;
+  background: var(--gray-50);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.main-content {
+  flex: 1;
+  margin-left: 380px; // Sidebar width
+  transition: margin-left 0.3s ease;
+  min-height: 100vh;
+  
+  &.sidebar-collapsed {
+    margin-left: 80px; // Collapsed sidebar width
+  }
+}
+
+.content-header {
+  background: white;
+  padding: 2rem 3rem;
+  border-bottom: 1px solid var(--gray-200);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.header-left {
+  .page-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--gray-900);
+    margin: 0 0 0.5rem 0;
+    line-height: 1.2;
+  }
+  
+  .page-subtitle {
+    color: var(--gray-600);
+    font-size: 1rem;
+    margin: 0;
+    line-height: 1.5;
+  }
+}
+
+.header-right {
+  .user-menu {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    background: var(--gray-50);
+    border-radius: var(--radius-lg);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    
+    &:hover {
+      background: var(--gray-100);
+      transform: translateY(-1px);
+    }
+    
+    .user-avatar {
+      width: 2.5rem;
+      height: 2.5rem;
+      background: var(--primary-500);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 1rem;
+    }
+    
+    .user-name {
+      font-weight: 600;
+      color: var(--gray-900);
+      font-size: 0.875rem;
+    }
+  }
+}
+
+.content-body {
+  padding: 3rem;
+  min-height: calc(100vh - 120px); // Minus header height
+}
+
+// Responsive design
+@media (max-width: 768px) {
+  .main-content {
+    margin-left: 0;
+    
+    &.sidebar-collapsed {
+      margin-left: 0;
+    }
+  }
+  
+  .content-header {
+    padding: 1.5rem 2rem;
+  }
+  
+  .content-body {
+    padding: 2rem;
+  }
+  
+  .header-left {
+    .page-title {
+      font-size: 1.5rem;
+    }
+  }
+}
